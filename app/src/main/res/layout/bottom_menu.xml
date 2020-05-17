@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_alignParentBottom="true">    <!-- 将在父容器底部 -->
+
+    <LinearLayout
+        style="@style/bottom_item"
+        android:id="@+id/bottom_life">
+
+        <ImageView
+            style="@style/bottom_img"
+            android:src="@drawable/ic_fas_fa_home"/>
+
+        <TextView
+            style="@style/bottom_text"
+            android:text="@string/home" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/bottom_item"
+        android:id="@+id/bottom_study">
+
+        <ImageView
+            style="@style/bottom_img"
+            android:src="@drawable/ic_far_fa_chart_bar"/>
+
+        <TextView
+            style="@style/bottom_text"
+            android:text="@string/forecast" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/bottom_item"
+        android:id="@+id/bottom_sport">
+
+        <ImageView
+            style="@style/bottom_img"
+            android:src="@drawable/ic_fas_fa_arrow_circle_up" />
+
+        <TextView
+            style="@style/bottom_text"
+            android:text="@string/upload" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/bottom_item"
+        android:id="@+id/bottom_i"
+        android:background="@drawable/bg_bottom_item_border_2">
+
+        <ImageView
+            style="@style/bottom_img"
+            android:src="@drawable/ic_fas_fa_user"/>
+
+        <TextView
+            style="@style/bottom_text"
+            android:text="@string/i" />
+
+    </LinearLayout>
+
+</LinearLayout>
