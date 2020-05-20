@@ -29,13 +29,16 @@
 
 
     <style name="bottom_item">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">0.25</item>
-        <item name="android:orientation">vertical</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:paddingTop">5dp</item>
-        <item name="android:background">@drawable/bg_bottom_item_border_1</item>
+        <item name="android:button">@null</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@drawable/tab_menu_text</item>
+        <item name="android:letterSpacing">0.25</item>
+        <item name="android:background">@drawable/bg_bottom_item_border_2</item>
     </style>
     <style name="bottom_img">
         <item name="android:layout_width">40dp</item>
