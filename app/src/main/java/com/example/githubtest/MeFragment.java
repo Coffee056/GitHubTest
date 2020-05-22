@@ -1,6 +1,6 @@
 package com.example.githubtest;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,24 +11,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link BlankFragment#newInstance} factory method to
+ * Use the {@link MeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BlankFragment extends Fragment {
+public class MeFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String TAG = "碎片生命周期测试";
+    private static final String TAG = "我的-生命周期";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private TextView text;
 
-    public BlankFragment() {
+    private TextView tv_authentication;
+    private TextView tv_phone_number;
+    public MeFragment() {
         // Required empty public constructor
     }
 
@@ -38,22 +40,16 @@ public class BlankFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment BlankFragment.
+     * @return A new instance of fragment MeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BlankFragment newInstance(String param1, String param2) {
-        BlankFragment fragment = new BlankFragment();
+    public static MeFragment newInstance(String param1, String param2) {
+        MeFragment fragment = new MeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context){
-        super.onAttach(context);
-        //Log.d(TAG, "onAttach: ");;
     }
 
     @Override
@@ -63,53 +59,68 @@ public class BlankFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Log.d(TAG, "onCreate: "+mParam1);
+        Log.d(TAG, "onCreate: ");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_blank, container, false);
-        text = (TextView)view.findViewById(R.id.text);
-        text.setText(mParam1);
-        Log.d(TAG, "onCreateView: "+mParam1);
+        // Inflate the layout for this fragment
+        Log.d(TAG, "onCreateView: ");
+        View view = inflater.inflate(R.layout.fragment_me, container, false);
+        tv_authentication = (TextView) view.findViewById(R.id.tv_authentication);
+        tv_phone_number = (TextView) view.findViewById(R.id.tv_phone_number);
+
+        tv_authentication.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),AuthenticationActivity.class);
+                startActivity(intent);
+            }
+        });
+        tv_phone_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),SetPhoneNumberActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
-    }
+}
 
     @Override
     public void onStart(){
         super.onStart();
-        Log.d(TAG, "onStart: "+mParam1);
+        Log.d(TAG, "onStart: ");
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        Log.d(TAG, "onResume: "+mParam1);
+        Log.d(TAG, "onResume: ");
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        Log.d(TAG, "onPause: "+mParam1);
+        Log.d(TAG, "onPause: ");
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        Log.d(TAG, "onStop: "+mParam1);
+        Log.d(TAG, "onStop: ");
     }
 
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        Log.d(TAG, "onDestroyView: "+mParam1);
+        Log.d(TAG, "onDestroyView: ");
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Log.d(TAG, "onDestroy: "+mParam1);
+        Log.d(TAG, "onDestroy: ");
     }
-
 }

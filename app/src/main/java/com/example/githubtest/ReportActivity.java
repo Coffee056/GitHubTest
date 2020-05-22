@@ -7,47 +7,45 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class HomeActivity extends AppCompatActivity {
-
+public class ReportActivity extends AppCompatActivity {
+    private ImageView btn_back;
     private ViewPager mViewPager;
     private RadioGroup mTabRadioGroup;
-    private RadioButton rb_home;
-    private RadioButton rb_forecast;
-    private RadioButton rb_upload;
-    private RadioButton rb_i;
+    private RadioButton rb_diagnosis;
+    private RadioButton rb_recure;
 
     private MyFragmentPagerAdapter mAdapter;
 
     //几个代表页面的常量
     public static final int PAGE_HOME = 0;
     public static final int PAGE_FORECAST = 1;
-    public static final int PAGE_UPLOAD = 2;
-    public static final int PAGE_I = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-
+        setContentView(R.layout.activity_report);
         mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         bindViews();
-        rb_home.setChecked(true);
-
+        rb_diagnosis.setChecked(true);
     }
 
     private void bindViews(){
+        btn_back = (ImageView) findViewById(R.id.back_btn);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         mTabRadioGroup = (RadioGroup) findViewById(R.id.bottom_menu);
-        rb_home = (RadioButton) findViewById(R.id.home_tab);
-        rb_forecast = (RadioButton) findViewById(R.id.forecast_tab);
-        rb_upload = (RadioButton) findViewById(R.id.upload_tab);
-        rb_i = (RadioButton) findViewById(R.id.i_tab);
+        rb_diagnosis = (RadioButton) findViewById(R.id.diagnosis_tab);
+        rb_recure = (RadioButton) findViewById(R.id.recure_tab);
 
         mViewPager = (ViewPager) findViewById(R.id.fragment_viewPager);
         mViewPager.setAdapter(mAdapter);
@@ -57,17 +55,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-        private final int PAGE_COUNT = 4;
-        private HomeFragment myFragment1 = null;
+        private final int PAGE_COUNT = 2;
+        private DiagnosisFragment myFragment1 = null;
         private Fragment myFragment2 = null;
-        private UploadFragment myFragment3 = null;
-        private MeFragment myFragment4 = null;
+
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
-            myFragment1 = HomeFragment.newInstance("","");
-            myFragment2 = BlankFragment.newInstance("预测","");
-            myFragment3 = UploadFragment.newInstance("","");
-            myFragment4 = MeFragment.newInstance("","");
+            myFragment1 = DiagnosisFragment.newInstance("","");
+            myFragment2 = BlankFragment.newInstance("康复","");
         }
         @Override
         public Fragment getItem(int position) {
@@ -78,12 +73,6 @@ public class HomeActivity extends AppCompatActivity {
                     break;
                 case PAGE_FORECAST:
                     fragment = myFragment2;
-                    break;
-                case PAGE_UPLOAD:
-                    fragment = myFragment3;
-                    break;
-                case PAGE_I:
-                    fragment = myFragment4;
                     break;
             }
             return fragment;
@@ -141,4 +130,5 @@ public class HomeActivity extends AppCompatActivity {
         super.onDestroy();
         mViewPager.removeOnPageChangeListener(mPageChangeListener);
     }
+
 }

@@ -16,6 +16,15 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
+    <style name="InputBoxStyle2">
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:background">@drawable/border_input_box</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
     <style name="EditTextStyle">
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginRight">10dp</item>
@@ -34,8 +43,9 @@
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
         <item name="android:button">@null</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@drawable/tab_menu_text</item>
         <item name="android:letterSpacing">0.1</item>
         <item name="android:background">@drawable/bg_bottom_item_border_2</item>
