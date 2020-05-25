@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ReportActivity"></activity>
+        <activity android:name=".ResetPwdActivity"></activity>
+        <activity android:name=".GetBackPwdActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ReportActivity" />
         <activity android:name=".UploadRecordActivity" />
         <activity android:name=".SetPhoneNumberActivity" />
         <activity android:name=".AuthenticationActivity" />

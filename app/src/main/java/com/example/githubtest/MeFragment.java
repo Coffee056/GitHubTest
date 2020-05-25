@@ -30,6 +30,9 @@ public class MeFragment extends Fragment {
 
     private TextView tv_authentication;
     private TextView tv_phone_number;
+
+    private String mobileNumber = null;
+
     public MeFragment() {
         // Required empty public constructor
     }
@@ -60,6 +63,8 @@ public class MeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         Log.d(TAG, "onCreate: ");
+
+        mobileNumber = ((HomeActivity) getActivity()).getMobileNumber();
     }
 
     @Override
@@ -78,10 +83,13 @@ public class MeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        tv_phone_number.setText(mobileNumber.substring(0,3)+"****"+mobileNumber.substring(7));
         tv_phone_number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),SetPhoneNumberActivity.class);
+                intent.putExtra("mobileNumber",mobileNumber);
                 startActivity(intent);
             }
         });

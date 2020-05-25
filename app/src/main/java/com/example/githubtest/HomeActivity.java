@@ -6,10 +6,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +33,14 @@ public class HomeActivity extends AppCompatActivity {
     public static final int PAGE_UPLOAD = 2;
     public static final int PAGE_I = 3;
 
+    private String mobileNumber = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        mobileNumber = getIntent().getStringExtra("mobileNumber");
 
         mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         bindViews();
@@ -141,4 +147,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onDestroy();
         mViewPager.removeOnPageChangeListener(mPageChangeListener);
     }
+
+    public String getMobileNumber(){
+        return mobileNumber;
+    }
+
 }
