@@ -49,9 +49,11 @@
                 android:text="手机号    "
                 />
             <EditText
+                android:id="@+id/et_mobile_number"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
+                android:inputType="number"
                 android:textSize="15sp"
                 android:hint="请输入手机号码" />
         </LinearLayout>
@@ -80,11 +82,12 @@
             android:text="设置密码"
             />
         <EditText
+            android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:textSize="15sp"
-            android:inputType="number"
+            android:inputType="textPassword"
             android:hint="请输入密码" />
 
     </LinearLayout>
@@ -105,11 +108,12 @@
             android:text="确认密码"
             />
         <EditText
+            android:id="@+id/et_second_pwd"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:textSize="15sp"
-            android:inputType="number"
+            android:inputType="textPassword"
             android:hint="请再次输入密码" />
 
     </LinearLayout>
@@ -134,10 +138,12 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:textSize="15sp"
+            android:inputType="number"
             android:hint="请输入验证码" />
     </LinearLayout>
 
     <Button
+        android:id="@+id/register_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

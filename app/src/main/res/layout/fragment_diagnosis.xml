@@ -35,7 +35,7 @@
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
                 android:textSize="15sp"
-                android:enabled="false"
+                android:focusable="false"
                 android:text="张三" />
         </LinearLayout>
 
@@ -64,7 +64,7 @@
                 android:layout_marginRight="25dp"
                 android:inputType="number"
                 android:textSize="15sp"
-                android:enabled="false"
+                android:focusable="false"
                 android:text="330304********0369" />
         </LinearLayout>
 
@@ -91,7 +91,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:enabled="false"
+                android:focusable="false"
                 android:textSize="15sp"
                 android:text="170***3813" />
 
@@ -115,14 +115,14 @@
                 android:text="确诊所在区域"
                 />
             <EditText
-                android:id="@+id/diagnosis_region"
+                android:id="@+id/et_diagnosis_region"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
                 android:textSize="15sp"
-                android:hint="请选择确诊所在区域" />
+                android:hint="请填写确诊所在区域" />
         </LinearLayout>
 
         <!-- 确诊医院 -->
@@ -143,6 +143,7 @@
                 android:text="确诊医院"
                 />
             <EditText
+                android:id="@+id/et_diagnosis_hospital"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
@@ -170,11 +171,13 @@
                 android:text="确诊时间"
                 />
             <EditText
+                android:id="@+id/et_diagnosis_date"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
+                android:focusable="false"
                 android:textSize="15sp"
                 android:hint="请选择确诊时间" />
         </LinearLayout>
@@ -208,6 +211,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/report_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:textSize="15sp"
-            android:text="性别 " />
+            android:text="健康状况" />
 
 
         <LinearLayout
@@ -108,7 +108,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
                 android:textSize="15sp"
-                android:text="男 " />
+                android:text="健康" />
         </LinearLayout>
     </LinearLayout>
 
