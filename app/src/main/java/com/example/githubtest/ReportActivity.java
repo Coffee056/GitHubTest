@@ -6,12 +6,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class ReportActivity extends AppCompatActivity {
     private ImageView btn_back;
@@ -21,6 +24,8 @@ public class ReportActivity extends AppCompatActivity {
     private RadioButton rb_recure;
 
     private MyFragmentPagerAdapter mAdapter;
+
+
 
     //几个代表页面的常量
     public static final int PAGE_HOME = 0;
@@ -33,6 +38,7 @@ public class ReportActivity extends AppCompatActivity {
         mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         bindViews();
         rb_diagnosis.setChecked(true);
+
     }
 
     private void bindViews(){
