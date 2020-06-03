@@ -84,7 +84,11 @@ public class MeFragment extends Fragment {
             }
         });
 
-        tv_phone_number.setText(mobileNumber.substring(0,3)+"****"+mobileNumber.substring(7));
+        if(mobileNumber.length() == 11) {
+            tv_phone_number.setText(mobileNumber.substring(0, 3) + "****" + mobileNumber.substring(7));
+        }else{
+            tv_phone_number.setText(mobileNumber);
+        }
         tv_phone_number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
