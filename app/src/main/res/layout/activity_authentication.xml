@@ -46,6 +46,7 @@
             android:text="姓名         "
             />
         <EditText
+            android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
@@ -69,6 +70,7 @@
             android:text="身份证号"
             />
         <EditText
+            android:id="@+id/et_IDnumber"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
@@ -79,6 +81,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/authentication_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

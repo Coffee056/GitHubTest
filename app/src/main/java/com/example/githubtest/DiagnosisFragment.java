@@ -63,13 +63,14 @@ public class DiagnosisFragment extends Fragment {
     private EditText et_diagnosis_region;
     private EditText et_diagnosis_hospital;
     private EditText et_diagnosis_date;
-    private Button upload_pic_btn;
+    private EditText et_diagnosis_case;
+    //private Button upload_pic_btn;
     private Button report_btn;
 
     private int mYear;
     private int mMonth;
     private int mDay;
-    private boolean isUploadPic = false;
+    //private boolean isUploadPic = false;
 
     public DiagnosisFragment() {
         // Required empty public constructor
@@ -115,7 +116,8 @@ public class DiagnosisFragment extends Fragment {
         et_diagnosis_region = (EditText) view.findViewById(R.id.et_diagnosis_region);
         et_diagnosis_hospital = (EditText) view.findViewById(R.id.et_diagnosis_hospital);
         et_diagnosis_date = (EditText) view.findViewById(R.id.et_diagnosis_date);
-        upload_pic_btn = (Button) view.findViewById(R.id.upload_pic_btn);
+        et_diagnosis_case = (EditText) view.findViewById(R.id.et_diagnosis_case);
+
         report_btn = (Button) view.findViewById(R.id.report_btn);
 
         et_diagnosis_date.setOnClickListener(new View.OnClickListener() {
@@ -125,18 +127,6 @@ public class DiagnosisFragment extends Fragment {
             }
         });
 
-        upload_pic_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                        PackageManager.PERMISSION_GRANTED ){
-                   // ActivityCompat.requestPermissions(getContext(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-                }else {
-                    choosePhoto();
-                }
-            }
-        });
 
         report_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +148,21 @@ public class DiagnosisFragment extends Fragment {
                         mYear = year;
                         mMonth = month;
                         mDay = dayOfMonth;
-                        et_diagnosis_date.setText(mYear+"-"+(mMonth+1)+"-"+mDay);
+                        int realMonth = mMonth+1;
+                        String yyyy = ""+mYear;
+                        String mm;
+                        String dd;
+                        if(realMonth < 10){
+                            mm = "0"+realMonth;
+                        }else{
+                            mm = ""+realMonth;
+                        }
+                        if(mDay < 10){
+                            dd = "0"+mDay;
+                        }else{
+                            dd = ""+mDay;
+                        }
+                        et_diagnosis_date.setText(yyyy+"-"+mm+"-"+dd);
                         //Toast.makeText(getActivity(),mYear+"   "+(mMonth+1)+"   "+mDay,Toast.LENGTH_SHORT).show();
                     }
                 },
@@ -177,8 +181,9 @@ public class DiagnosisFragment extends Fragment {
         }else if(TextUtils.isEmpty(et_diagnosis_date.getText())) {
             Toast.makeText(getActivity(), "请选择确诊时间", Toast.LENGTH_SHORT).show();
             //et_diagnosis_date.requestFocus();
-        }else if(!isUploadPic){
-            Toast.makeText(getActivity(), "请选择确诊文件", Toast.LENGTH_SHORT).show();
+        }else if(TextUtils.isEmpty(et_diagnosis_case.getText())){
+            Toast.makeText(getActivity(), "请填写病史", Toast.LENGTH_SHORT).show();
+            et_diagnosis_case.requestFocus();
         }else{
             //Toast.makeText(getActivity(), "上报成功，请等待审核", Toast.LENGTH_SHORT).show();
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.custom_dialog);
@@ -198,94 +203,95 @@ public class DiagnosisFragment extends Fragment {
     //上报成功逻辑
     private void successReport(){
         // TO-Do 传给服务器上报信息(包括蓝牙连接信息?)
+
         // 以及 保存上报记录到本地
 
         Toast.makeText(getActivity(), "上报成功!", Toast.LENGTH_SHORT).show();
         getActivity().finish();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == 1){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                choosePhoto();
-            }else{
-                Toast.makeText(getActivity(),"You denied the permission",Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        if(requestCode == 1){
+//            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+//                choosePhoto();
+//            }else{
+//                Toast.makeText(getActivity(),"You denied the permission",Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
     //选择图片功能
-    private  void choosePhoto(){
-        // 添加图片的主要代码
-        Intent intent = new Intent();
-        // 设定类型为image
-        intent.setType("image/*");
-        // 设置action
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        //Log.d("AddActivityTest", "MenuClickEvent: choose pics button");
-        // 选中相片后返回本Activity
-        startActivityForResult(intent, 10);
-    }
+//    private  void choosePhoto(){
+//        // 添加图片的主要代码
+//        Intent intent = new Intent();
+//        // 设定类型为image
+//        intent.setType("image/*");
+//        // 设置action
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        //Log.d("AddActivityTest", "MenuClickEvent: choose pics button");
+//        // 选中相片后返回本Activity
+//        startActivityForResult(intent, 10);
+//    }
 
-    //数据回调方法
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK) {
-            Toast.makeText(getActivity(),"success",Toast.LENGTH_SHORT).show();
-            // 如果是选择照片
-            if (requestCode == 10) {
-                String path = handleImageOnKitKat(data);
-                isUploadPic = true;
-                Bitmap bitmap = BitmapFactory.decodeFile(path);
-                upload_pic_btn.setBackground(new BitmapDrawable(getContext().getResources(),bitmap));
-                Toast.makeText(getActivity(),path,Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    //数据回调方法
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == getActivity().RESULT_OK) {
+//            Toast.makeText(getActivity(),"success",Toast.LENGTH_SHORT).show();
+//            // 如果是选择照片
+//            if (requestCode == 10) {
+//                String path = handleImageOnKitKat(data);
+//                isUploadPic = true;
+//                Bitmap bitmap = BitmapFactory.decodeFile(path);
+//                upload_pic_btn.setBackground(new BitmapDrawable(getContext().getResources(),bitmap));
+//                Toast.makeText(getActivity(),path,Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
-    //取相册照片功能用的函数-获取文件路径   content开头URI --> 文件绝对路径
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private String handleImageOnKitKat(Intent data){
-        String imagePath = null;
-        Uri uri = data.getData();
-        if(DocumentsContract.isDocumentUri(getActivity(),uri)){
-            // 如果是document类型的Uri，则通过document id处理
-            String docId = DocumentsContract.getDocumentId(uri);
-            if("com.android.providers.media.documents".equals(uri.getAuthority())){
-                String id = docId.split(":")[1];
-                String selection = MediaStore.Images.Media._ID + "=" + id;
-                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
-
-            }else if("com.android.providers.downloads.documents".equals(uri.getAuthority())){
-                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),Long.valueOf(docId));
-                imagePath = getImagePath(contentUri,null);
-            }
-        } else if("content".equalsIgnoreCase(uri.getScheme())){
-            //如果是content类型的Uri，则使用普通方式处理
-            imagePath = getImagePath(uri,null);
-
-        } else if("file".equalsIgnoreCase(uri.getScheme())){
-            //如果是file类型的Uri，直接获取图片路径即可
-            imagePath = uri.getPath();
-        }
-        //Log.d("AddActivityTest", "handleImageOnKitKat  imagePath="+imagePath);
-        return  imagePath;
-    }
-    public String getImagePath(Uri uri, String selection){
-        String path = null;
-        Cursor cursor = getActivity().getContentResolver().query(uri,null,selection,null,null);
-        if(cursor != null){
-            if(cursor.moveToFirst()){
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            }
-            cursor.close();
-        }
-        return path;
-    }
+//    //取相册照片功能用的函数-获取文件路径   content开头URI --> 文件绝对路径
+//    @TargetApi(Build.VERSION_CODES.KITKAT)
+//    private String handleImageOnKitKat(Intent data){
+//        String imagePath = null;
+//        Uri uri = data.getData();
+//        if(DocumentsContract.isDocumentUri(getActivity(),uri)){
+//            // 如果是document类型的Uri，则通过document id处理
+//            String docId = DocumentsContract.getDocumentId(uri);
+//            if("com.android.providers.media.documents".equals(uri.getAuthority())){
+//                String id = docId.split(":")[1];
+//                String selection = MediaStore.Images.Media._ID + "=" + id;
+//                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+//
+//            }else if("com.android.providers.downloads.documents".equals(uri.getAuthority())){
+//                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),Long.valueOf(docId));
+//                imagePath = getImagePath(contentUri,null);
+//            }
+//        } else if("content".equalsIgnoreCase(uri.getScheme())){
+//            //如果是content类型的Uri，则使用普通方式处理
+//            imagePath = getImagePath(uri,null);
+//
+//        } else if("file".equalsIgnoreCase(uri.getScheme())){
+//            //如果是file类型的Uri，直接获取图片路径即可
+//            imagePath = uri.getPath();
+//        }
+//        //Log.d("AddActivityTest", "handleImageOnKitKat  imagePath="+imagePath);
+//        return  imagePath;
+//    }
+//    public String getImagePath(Uri uri, String selection){
+//        String path = null;
+//        Cursor cursor = getActivity().getContentResolver().query(uri,null,selection,null,null);
+//        if(cursor != null){
+//            if(cursor.moveToFirst()){
+//                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+//            }
+//            cursor.close();
+//        }
+//        return path;
+//    }
 
 
 }

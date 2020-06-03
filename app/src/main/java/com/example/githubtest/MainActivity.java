@@ -82,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
 //            et_account.requestFocus();
 //        }
         else{
+//            Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+//            intent.putExtra("mobileNumber",mobileNums);
+//            startActivity(intent);
+//            finish();
             //http请求数据库
             OkHttpClient client = new OkHttpClient();
             FormBody body = new FormBody.Builder()
