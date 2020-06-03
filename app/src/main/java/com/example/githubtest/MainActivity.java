@@ -4,12 +4,28 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttp;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     private Button login_btn;
@@ -51,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void userLogin(String mobileNums,String password){
+    //用户尝试登录
+    private void userLogin(final String mobileNums,final String password){
         if(TextUtils.isEmpty(mobileNums)){
             Toast.makeText(this,"手机号不能为空",Toast.LENGTH_SHORT).show();
             et_account.requestFocus();
@@ -60,19 +77,41 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this,"密码不能为空",Toast.LENGTH_SHORT).show();
             et_password.requestFocus();
         }
-        else if(! isMobileNO(mobileNums)){
-            Toast.makeText(this,"手机号输入不正确",Toast.LENGTH_SHORT).show();
-            et_account.requestFocus();
-        }
+//        else if(! isMobileNO(mobileNums)){
+//            Toast.makeText(this,"手机号输入不正确",Toast.LENGTH_SHORT).show();
+//            et_account.requestFocus();
+//        }
         else{
-            Toast.makeText(this,"登录成功！",Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this,HomeActivity.class);
-            intent.putExtra("mobileNumber",mobileNums);
-            startActivity(intent);
-            finish();
+            //http请求数据库
+            OkHttpClient client = new OkHttpClient();
+            FormBody body = new FormBody.Builder()
+                    .add("tel",mobileNums)
+                    .add("password",password)
+                    .build();
+            Request request = new Request.Builder()
+                    .url("http://39.97.163.234:8443/api/userAccount/loginOne")
+                    .post(body)
+                    .build();
+
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    e.printStackTrace();
+                    Log.d("LoginTest", "onFailure: 访问服务器失败");
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String s = response.body().string();
+                    Log.d("LoginTest", "onResponse: "+s);
+                    processLogin(Integer.parseInt(s),mobileNums);
+                }
+            });
         }
     }
 
+    //判断手机号格式是否正确
     private boolean isMobileNO(String mobileNums) {
         /**
          * 判断字符串是否符合手机号码格式
@@ -88,4 +127,35 @@ public class MainActivity extends AppCompatActivity {
         else
             return mobileNums.matches(telRegex);
     }
+
+    //处理从服务器获取的登录返回信息
+    private void processLogin(final int code, String mobileNums){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(code == 0){
+                    //Log.d("LoginTest", "onResponse: "+"登录成功");
+                    Toast.makeText(MainActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
+                }else if(code == 1){
+                    //Log.d("LoginTest", "onResponse: "+"未注册");
+                    Toast.makeText(MainActivity.this,"用户名或密码错误",Toast.LENGTH_SHORT).show();
+                    et_password.setText("");
+                }else if(code == 2){
+                    //Log.d("LoginTest", "onResponse: "+"已在线");
+                    Toast.makeText(MainActivity.this,"已在其它设备登录",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(MainActivity.this,"无法识别的code:"+code,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        if(code == 0){
+            //Toast.makeText(MainActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+            intent.putExtra("mobileNumber",mobileNums);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+
 }

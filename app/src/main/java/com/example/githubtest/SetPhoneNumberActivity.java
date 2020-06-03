@@ -30,6 +30,11 @@ public class SetPhoneNumberActivity extends AppCompatActivity {
         });
 
         tv_set_phone_number = (TextView) findViewById(R.id.tv_set_phone_number);
-        tv_set_phone_number.setText(mobileNumber.substring(0,3)+"****"+mobileNumber.substring(7));
+        if(mobileNumber.length() == 11) {
+            tv_set_phone_number.setText(mobileNumber.substring(0, 3) + "****" + mobileNumber.substring(7));
+        }else{
+            tv_set_phone_number.setText(mobileNumber);
+        }
+        //tv_set_phone_number.setText(mobileNumber.substring(0,3)+"****"+mobileNumber.substring(7));
     }
 }
