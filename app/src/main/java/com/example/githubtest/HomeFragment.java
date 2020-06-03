@@ -1,20 +1,25 @@
 package com.example.githubtest;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import java.util.List;
 
 
 /**
@@ -32,11 +37,23 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private boolean isOnBlueTooth = false;
+    //private boolean isOnBlueTooth = false;
 
     private ImageButton btn_bluetooth;
-    private TextView tv_bluetooth_btn_text;
+    private static TextView tv_bluetooth_btn_text;
     private TextView tv_safety_reminder_record;
+
+    private static Handler handler = new Handler();
+    private static Runnable serviceStop = new Runnable() {
+        public void run() {
+            tv_bluetooth_btn_text.setText("蓝牙未开启");
+            tv_bluetooth_btn_text.setTextColor(Color.parseColor("#9D9D9D"));
+        }
+    };
+
+    public static void UpdateGUI() {
+        handler.post(serviceStop);
+    }
 
     public HomeFragment() {
         // Required empty public constructor
@@ -69,8 +86,8 @@ public class HomeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         SharedPreferences preferences = getActivity().getSharedPreferences("data",Context.MODE_PRIVATE);
-        isOnBlueTooth = preferences.getBoolean("isOnBlueTooth",false);
-        Log.d(TAG, "onCreate: " + "SharedPreferences-get-isOnBlueTooth = " + isOnBlueTooth);
+        //isOnBlueTooth = preferences.getBoolean("isOnBlueTooth",false);
+        //Log.d(TAG, "onCreate: " + "SharedPreferences-get-isOnBlueTooth = " + isOnBlueTooth);
     }
 
 
@@ -87,18 +104,16 @@ public class HomeFragment extends Fragment {
         tv_bluetooth_btn_text = (TextView) view.findViewById(R.id.tv_bluetooth_btn_text);
         tv_safety_reminder_record = (TextView) view.findViewById(R.id.tv_safety_reminder_record);
 
-        if(isOnBlueTooth){
-            onBlueTooth();
-        }else{
-            offBlueTooth();
-        }
-
+        isServiceRun();
+        final Intent serviceIntent = new Intent(getActivity(), BlueToothService.class);
         btn_bluetooth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!btn_bluetooth.isSelected()){
+                    getActivity().startService(serviceIntent);
                     onBlueTooth();
                 }else{
+                    getActivity().stopService(serviceIntent);
                     offBlueTooth();
                 }
             }
@@ -114,18 +129,48 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    public void isServiceRun()
+    {
+        boolean serviceRunning = isServiceRunning(getActivity(),
+                "com.example.githubtest.BlueToothService");
+
+        if(serviceRunning)
+        {
+            onBlueTooth();
+        }else{
+            offBlueTooth();
+        }
+
+    }
+
     private void onBlueTooth(){
-        isOnBlueTooth = true;
+        //isOnBlueTooth = true;
         btn_bluetooth.setSelected(true);
         tv_bluetooth_btn_text.setText("蓝牙已开启");
         tv_bluetooth_btn_text.setTextColor(getResources().getColor(R.color.white));
     }
 
     private void offBlueTooth(){
-        isOnBlueTooth = false;
+        //isOnBlueTooth = false;
         btn_bluetooth.setSelected(false);
         tv_bluetooth_btn_text.setText("蓝牙未开启");
         tv_bluetooth_btn_text.setTextColor(getResources().getColor(R.color.text_grey));
+    }
+
+    public static boolean isServiceRunning(Context context,String serviceName){
+        // 校验服务是否还存在
+        ActivityManager am = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> services = am.getRunningServices(100);
+
+        for (ActivityManager.RunningServiceInfo info : services) {
+            // 得到所有正在运行的服务的名称
+            String name = info.service.getClassName();
+            if (serviceName.equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -147,10 +192,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        SharedPreferences.Editor editor = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE).edit();
-        editor.putBoolean("isOnBlueTooth",isOnBlueTooth);
-        editor.apply();
-        Log.d(TAG, "onPause: SharedPreferences-save-isOnBlueTooth="+isOnBlueTooth);
+//        SharedPreferences.Editor editor = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE).edit();
+//        editor.putBoolean("isOnBlueTooth",isOnBlueTooth);
+//        editor.apply();
+//        Log.d(TAG, "onPause: SharedPreferences-save-isOnBlueTooth="+isOnBlueTooth);
 
     }
 
