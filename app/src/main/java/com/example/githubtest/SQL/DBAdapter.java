@@ -18,11 +18,11 @@ public class DBAdapter {
     private static final int DB_VERSION = 1;
 
     public static final String KEY_ID = "_id";
-    public static final String KEY_DATE = "date";
-    public static final String KEY_TIME = "time";
+    public static final String KEY_DATE = "datetime";
+    public static final String KEY_ISSent = "isSent";
     public static final String KEY_MAC ="mac";
     public static final String KEY_DURATION ="duration";
-    
+
 
 
     private SQLiteDatabase db;
@@ -56,9 +56,9 @@ public class DBAdapter {
     public long insertBTConnection(BTConnection connection) {
         ContentValues newValues = new ContentValues();
 
-       
-        newValues.put(KEY_DATE, connection.date.toString());
-        newValues.put(KEY_TIME, connection.time.toString());
+
+        newValues.put(KEY_DATE, BTConnection.DateToString(connection.datetime));
+        newValues.put(KEY_ISSent, connection.isSent);
         newValues.put(KEY_MAC,connection.MAC_address);
         newValues.put(KEY_DURATION,connection.duration);
         return db.insert(DB_TABLE_BTConnection, null, newValues);
@@ -66,33 +66,27 @@ public class DBAdapter {
 
 
     public BTConnection[] queryAllBTConnection() {
-        Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_TIME,KEY_DURATION,KEY_MAC},
+        Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
                 null, null, null, null, null);
         return ConvertToBTConnection(results);
     }
 
 
     public BTConnection[] queryBTConnectionByID(long id) {
-        Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_TIME,KEY_DURATION,KEY_MAC},
+        Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
                 KEY_ID + "=" + id, null, null, null, null);
         return ConvertToBTConnection(results);
     }
 
     public BTConnection[] queryBTConnectionByDate(Date date1, Date date2) {
-        Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_TIME,KEY_DURATION,KEY_MAC},
-                "date("+KEY_DATE+") >= "+" date(?) and date("+KEY_DATE+") <= "+
-                        " date(?) ORDER BY "+KEY_DATE +" DESC"
+        Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
+                "datetime("+KEY_DATE+") >= "+" datetime(?) and datetime("+KEY_DATE+") <= "+
+                        " datetime(?) ORDER BY "+KEY_DATE +" DESC"
                 , new String[] {date1.toString(),date2.toString()}, null, null, null);
         return ConvertToBTConnection(results);
     }
 
-    public BTConnection[] queryBTConnectionByTime(Date date, Time time1, Time time2) {
-        Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_TIME, KEY_DURATION,KEY_MAC},
-                "date("+KEY_DATE+") = data(?) and"+"time("+KEY_TIME+") >= "+" time(?) and date("
-                        +KEY_TIME+") <= "+ " date(?) ORDER BY "+KEY_TIME +" ASC"
-                , new String[] {date.toString(),time1.toString(),time2.toString()}, null, null, null);
-        return ConvertToBTConnection(results);
-    }
+
 
 
     private BTConnection[] ConvertToBTConnection(Cursor cursor){
@@ -104,8 +98,8 @@ public class DBAdapter {
         for (int i = 0 ; i<resultCounts; i++){
             connections[i] = new BTConnection();
             connections[i].ID = cursor.getInt(0);
-            connections[i].date = BTConnection.strToDate(cursor.getString(cursor.getColumnIndex(KEY_DATE)));
-            connections[i].time = BTConnection.strToTime(cursor.getString(cursor.getColumnIndex(KEY_TIME)));
+            connections[i].datetime = BTConnection.strToDate(cursor.getString(cursor.getColumnIndex(KEY_DATE)));
+            connections[i].isSent = cursor.getInt(cursor.getColumnIndex(KEY_ISSent));
             connections[i].duration = cursor.getInt(cursor.getColumnIndex(KEY_DURATION));
             connections[i].MAC_address=cursor.getString(cursor.getColumnIndex(KEY_MAC));
             cursor.moveToNext();
@@ -124,8 +118,8 @@ public class DBAdapter {
 
     public long updateBTConnection(long id , BTConnection connection){
         ContentValues updateValues = new ContentValues();
-        updateValues.put(KEY_DATE, connection.date.toString());
-        updateValues.put(KEY_TIME, connection.time.toString());
+        updateValues.put(KEY_DATE, BTConnection.DateToString(connection.datetime));
+        updateValues.put(KEY_ISSent, connection.isSent);
         updateValues.put(KEY_DURATION,connection.duration);
 
         return db.update(DB_TABLE_BTConnection, updateValues,  KEY_ID + "=" + id, null);
@@ -142,8 +136,8 @@ public class DBAdapter {
         private static final String DB_CREATE_BTConnection = "create table " +
                 DB_TABLE_BTConnection + " (" + KEY_ID + " integer primary key autoincreme" +
                 "nt, " +
-                 KEY_DATE + " text not null," + KEY_TIME + " text not null,"+
-                 KEY_DURATION+" integer not null,"+KEY_MAC +" text not null" +");";
+                KEY_DATE + " text not null," + KEY_ISSent + " integer not null,"+
+                KEY_DURATION+" integer not null,"+KEY_MAC +" text not null" +");";
 
         @Override
         public void onOpen(SQLiteDatabase _db) {

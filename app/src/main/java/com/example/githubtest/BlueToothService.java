@@ -22,8 +22,10 @@ import java.util.List;
 public class BlueToothService extends Service {
 
     private static final String TAG="MainActivity";
-    private List<String> list;
+    private List<BTConnection> list;
+    private List<BTConnection> lastlist;
     private List<String> adresslist;
+    private List<String> lastadresslist;
     DBAdapter dbAdapter;
     BluetoothAdapter btAdapt;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -37,7 +39,9 @@ public class BlueToothService extends Service {
         dbAdapter = new DBAdapter(this);
         dbAdapter.open();//启动数据库
         list=new ArrayList<>();
+        lastlist=new ArrayList<>();
         adresslist=new ArrayList<>();
+        lastadresslist = new ArrayList<>();
         if(!initData()) {stopSelf();return;}
 
         this.workThread = new Thread((ThreadGroup)null, this.backgroudWork, "WorkThread");
@@ -79,8 +83,10 @@ public class BlueToothService extends Service {
             while(true) {
                 try {
                     if (!Thread.interrupted()) {
-                    adresslist.clear();
-                    list.clear();
+                        lastadresslist=adresslist;
+                        lastlist=list;
+                        adresslist=new ArrayList<>();
+                        list = new ArrayList<>();
                     btAdapt.startDiscovery();
                         Thread.sleep(60*1000L);
                         continue;
@@ -103,20 +109,33 @@ public class BlueToothService extends Service {
             if (action.equals(BluetoothDevice.ACTION_FOUND)) { //found device
                 BluetoothDevice device = intent
                         .getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String str = device.getName() + "|" + device.getAddress() +"\n";
                 String adress = device.getAddress();
-                Log.e(TAG, "onReceive str: "+str );
-                if (list.indexOf(str) == -1)// 防止重复添加
-                    list.add(str); // 获取设备名称和mac地址
+                Log.e(TAG, "onReceive str: "+adress );
                 if (adresslist.indexOf(adress)==-1)
                 {
-                    adresslist.add(adress);
                     Date date = new Date();
-                    String datenow = dateFormat.format(date); // 日期
-                    String timenow = timeFormat.format(date); // 时间
-                    dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate(datenow),
-                            BTConnection.strToTime(timenow),adress));
-                    Toast.makeText(getBaseContext(), timenow+"  "+adress, Toast.LENGTH_SHORT).show();
+                    adresslist.add(adress);
+                    if(lastadresslist.indexOf(adress)==-1)
+                    {
+                        BTConnection bt = new BTConnection(date,adress);
+                        bt.ID = dbAdapter.insertBTConnection(bt);
+                        list.add(bt);
+                        Toast.makeText(getBaseContext(),date.toString()+"  "+adress, Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        for(BTConnection bt:lastlist)
+                        {
+                            if(bt.MAC_address.equals(adress))
+                            {
+                                BTConnection newbt =dbAdapter.queryBTConnectionByID(bt.ID)[0];
+                                newbt.duration += date.getTime()-newbt.datetime.getTime();
+                                dbAdapter.updateBTConnection(newbt.ID,newbt);
+                                newbt.datetime=date;
+                                list.add(newbt);
+                            }
+                        }
+                    }
                 }
 
             }

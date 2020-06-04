@@ -1,23 +1,23 @@
 package com.example.githubtest.SQL;
 
-import java.sql.Date;
-import java.sql.Time;
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class BTConnection {
-    public int ID = -1;
-    public Date date;
-    public Time time;
-    public int duration =0;
+    public long ID = -1;
+    public Date datetime;//日期时间
+    public int duration =0;//连接持续时间
+    public int isSent =0;//是否上传
     public String MAC_address;
 
     public  BTConnection()
     {}
 
-    public BTConnection(Date date, Time time,String address)
+    public BTConnection(Date datetime, String address)
     {
-        this.date = date;
-        this.time = time;
+        this.datetime = datetime;
         this.MAC_address = address;
     }
 
@@ -26,36 +26,31 @@ public class BTConnection {
     public String toString(){
         String result = "";
         result += "id为" + this.ID +"，";
-        result += "日期为" + this.date.toString() + "，";
-        result += "连接开始时间为" + this.time.toString() + "，";
+        result += "时间为" + this.datetime.toString() + "，";
         result += "MAC地址为" + this.MAC_address;
         result += "持续时间为"+ this.duration +"秒.";
+        result +=" 是否发送" + this.isSent;
         return result;
     }
 
     public static Date strToDate(String strDate) {
-        String str = strDate;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date d = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Log.v("Test",strDate);
+        Date d=null;
         try {
-            d = format.parse(str);
+            d = format.parse(strDate);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Date date = new Date(d.getTime());
-        return date;
+        return d;
     }
 
-    public static Time strToTime(String strDate) {
-        String str = strDate;
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-        java.util.Date d = null;
-        try {
-            d = format.parse(str);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Time time = new Time(d.getTime());
-        return time;
+    public static String DateToString(Date date)
+    {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String s=format.format(date);
+        Log.v("Time",s);
+        return s;
     }
+
 }

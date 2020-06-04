@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
     private static Runnable serviceStop = new Runnable() {
         public void run() {
             tv_bluetooth_btn_text.setText("蓝牙未开启");
-            tv_bluetooth_btn_text.setTextColor(Color.parseColor("#9D9D9D"));
+            tv_bluetooth_btn_text.setTextColor(Color.parseColor("#FFFFFF"));
         }
     };
 
