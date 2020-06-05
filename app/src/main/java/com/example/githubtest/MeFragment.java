@@ -1,6 +1,8 @@
 package com.example.githubtest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,12 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -84,65 +88,18 @@ public class MeFragment extends Fragment {
         }
         Log.d(TAG, "onCreate: ");
 
-        mobileNumber = ((HomeActivity) getActivity()).getMobileNumber();
+        //mobileNumber = ((HomeActivity) getActivity()).getMobileNumber();
 
-        //http请求数据库
-        OkHttpClient client = new OkHttpClient();
-        FormBody body = new FormBody.Builder()
-                .add("tel",mobileNumber)
-                .build();
-        Request request = new Request.Builder()
-                .url("http://39.97.163.234:8443/api/userAccount/findOne")
-                .post(body)
-                .build();
-
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                Log.d("FindOneTest", "onFailure: 访问服务器失败");
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String s = response.body().string();
-                Log.d("FindOneTest", "onResponse: "+s);
-                parseJSONWithJSONObject(s);
-            }
-        });
+        SharedPreferences preferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        mobileNumber = preferences.getString("tel",null);
+        name = preferences.getString("name",null);
+        IDnumber = preferences.getString("IDnumber",null);
+        health = preferences.getString("health",null);
+        risk = preferences.getFloat("risk",0.0f);
+        risk = new BigDecimal(risk*100).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
 
     }
 
-    private void parseJSONWithJSONObject(String jsonData){
-        try{
-            JSONObject jsonObject = new JSONObject(jsonData);
-            IDnumber = jsonObject.getString("idnumber");
-            health = jsonObject.getString("health");
-            name = jsonObject.getString("name");
-            risk = jsonObject.getDouble("risk");
-            //String risk = jsonObject.getString("risk");
-            Log.d("FindOneTest","IDnumber:"+IDnumber+"   health:"+health+"   name:"+name+"   risk:"+risk);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(name!=null||!name.equals("")){
-                    isAuthentication = true;
-                    tv_authentication.setText(name+"(已实名)");
-                }
-                if(health!=null||!health.equals("")){
-                    tv_health.setText(health);
-                }
-                tv_risk.setText(String.valueOf(risk));
-
-
-            }
-        });
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -155,12 +112,18 @@ public class MeFragment extends Fragment {
         tv_health = (TextView) view.findViewById(R.id.tv_health);
         tv_risk = (TextView) view.findViewById(R.id.tv_risk);
 
+        if(name != null && IDnumber != null){
+            isAuthentication = true;
+            tv_authentication.setText(name+"(已实名)");
+        }
+
+        tv_health.setText(health);
+        tv_risk.setText(String.valueOf(risk)+"%");
 
         tv_authentication.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),AuthenticationActivity.class);
-                //startActivity(intent);
                 intent.putExtra("isAuthentication",isAuthentication);
                 intent.putExtra("name",name);
                 intent.putExtra("IDnumber",IDnumber);
@@ -195,11 +158,12 @@ public class MeFragment extends Fragment {
                     name = data.getStringExtra("name");
                     IDnumber = data.getStringExtra("IDnumber");
                     if(name != null){
+                        Toast.makeText(getActivity(), "认证成功!", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onActivityResult: not null");
                         tv_authentication.setText(name+"(已实名)");
                         isAuthentication = true;
                     }else{
-                        Log.d(TAG, "onActivityResult: null");
+                        Log.d(TAG, "onActivityResult: name is null");
                     }
                 }
         }

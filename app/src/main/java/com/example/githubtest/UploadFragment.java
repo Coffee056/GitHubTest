@@ -1,11 +1,16 @@
 package com.example.githubtest;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +76,7 @@ public class UploadFragment extends Fragment {
         tv_upload_record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),UploadRecordActivity.class);
+                Intent intent = new Intent(getActivity(), UploadRecordActivity.class);
                 startActivity(intent);
             }
         });
@@ -79,8 +84,18 @@ public class UploadFragment extends Fragment {
         btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),ReportActivity.class);
-                startActivity(intent);
+                SharedPreferences preferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+                String name = preferences.getString("name",null);
+                if(name != null) {
+                    Intent intent = new Intent(getActivity(),ReportActivity.class);
+                    startActivity(intent);
+                }else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.custom_dialog);
+                    builder.setTitle("上报提示");
+                    builder.setMessage("请先在'我的'页面中完成身份认证！");
+                    builder.setPositiveButton("确认", null);
+                    builder.show();
+                }
             }
         });
         return view;

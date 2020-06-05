@@ -7,14 +7,27 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -46,6 +59,8 @@ public class HomeActivity extends AppCompatActivity {
         bindViews();
         rb_home.setChecked(true);
 
+        updateUserInfo();
+
     }
 
     private void bindViews(){
@@ -62,6 +77,71 @@ public class HomeActivity extends AppCompatActivity {
         mTabRadioGroup.setOnCheckedChangeListener(mOnCheckedChangeListener);
     }
 
+    //从服务器更新用户信息
+    private void updateUserInfo(){
+        //http请求数据库
+        OkHttpClient client = new OkHttpClient();
+        FormBody body = new FormBody.Builder()
+                .add("tel",mobileNumber)
+                .build();
+        Request request = new Request.Builder()
+                .url("http://39.97.163.234:8443/api/userAccount/findOne")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                Log.d("FindOneTest", "onFailure: 访问服务器失败");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String s = response.body().string();
+                Log.d("FindOneTest", "onResponse: "+s);
+                parseJSONWithJSONObject(s);
+            }
+        });
+    }
+
+    //处理json格式数据，并增改SharedPreferences
+    private void parseJSONWithJSONObject(String jsonData){
+        try{
+            JSONObject jsonObject = new JSONObject(jsonData);
+
+            String IDnumber = jsonObject.getString("idnumber");
+            String health = jsonObject.getString("health");
+            String name = jsonObject.getString("name");
+            double risk = jsonObject.getDouble("risk");
+
+            if(IDnumber.equals("null")){
+                Log.d("FindOneTest","IDnumber is null");
+                IDnumber = null;
+
+            }
+            if(name.equals("null")){
+                Log.d("FindOneTest","name is null");
+                name = null;
+            }
+
+            SharedPreferences.Editor editor = getSharedPreferences("UserInfo",MODE_PRIVATE).edit();
+            editor.putString("tel",mobileNumber);
+            editor.putString("name",name);
+            editor.putString("IDnumber",IDnumber);
+            editor.putString("health",health);
+            editor.putFloat("risk",(float)risk);
+            editor.apply();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    //下面三个成员(MyFragmentPagerAdapter,mPageChangeListener,mOnCheckedChangeListener) : Fragment+RadioGroup+RadioButton+ViewPager 实现滑动页面及底部栏
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         private final int PAGE_COUNT = 4;
         private HomeFragment myFragment1 = null;

@@ -29,7 +29,7 @@
                 android:text="姓名"
                 />
             <EditText
-                android:id="@+id/et_diagnosis_name"
+                android:id="@+id/et_recovery_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
@@ -58,7 +58,7 @@
                 android:text="身份证号"
                 />
             <EditText
-                android:id="@+id/et_diagnosis_IDnumber"
+                android:id="@+id/et_recovery_IDnumber"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
@@ -88,7 +88,7 @@
                 android:text="手机号码"
                 />
             <EditText
-                android:id="@+id/et_diagnosis_tel"
+                android:id="@+id/et_recovery_tel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
@@ -115,17 +115,17 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                android:text="确诊所在省市"
+                android:text="康复所在省市"
                 />
             <EditText
-                android:id="@+id/et_diagnosis_region"
+                android:id="@+id/et_recovery_region"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
                 android:textSize="15sp"
-                android:hint="请填写确诊所在省市" />
+                android:hint="请填写康复所在省市" />
         </LinearLayout>
 
         <!-- 确诊医院 -->
@@ -143,17 +143,17 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                android:text="确诊医院"
+                android:text="康复医院"
                 />
             <EditText
-                android:id="@+id/et_diagnosis_hospital"
+                android:id="@+id/et_recovery_hospital"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
                 android:textSize="15sp"
-                android:hint="请填写确诊医院" />
+                android:hint="请填写康复医院" />
         </LinearLayout>
 
         <!-- 确诊时间 -->
@@ -171,10 +171,10 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                android:text="确诊时间"
+                android:text="康复时间"
                 />
             <EditText
-                android:id="@+id/et_diagnosis_date"
+                android:id="@+id/et_recovery_date"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
@@ -182,7 +182,7 @@
                 android:layout_marginRight="25dp"
                 android:focusable="false"
                 android:textSize="15sp"
-                android:hint="请选择确诊时间" />
+                android:hint="请选择康复时间" />
         </LinearLayout>
 
         <!-- 确诊病史 -->
@@ -203,7 +203,7 @@
                 android:text="病史"
                 />
             <EditText
-                android:id="@+id/et_diagnosis_case"
+                android:id="@+id/et_recovery_case"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
