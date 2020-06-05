@@ -28,7 +28,7 @@ public class BTConnection {
         result += "id为" + this.ID +"，";
         result += "时间为" + this.datetime.toString() + "，";
         result += "MAC地址为" + this.MAC_address;
-        result += "持续时间为"+ this.duration +"秒.";
+        result += "持续时间为"+ this.duration +"毫秒.";
         result +=" 是否发送" + this.isSent;
         return result;
     }

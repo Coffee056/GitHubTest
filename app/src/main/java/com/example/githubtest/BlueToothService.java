@@ -88,7 +88,7 @@ public class BlueToothService extends Service {
                         adresslist=new ArrayList<>();
                         list = new ArrayList<>();
                     btAdapt.startDiscovery();
-                        Thread.sleep(60*1000L);
+                        Thread.sleep(30*1000L);
                         continue;
                     }
                 } catch (InterruptedException var3) {
@@ -105,6 +105,7 @@ public class BlueToothService extends Service {
 
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+
 
             if (action.equals(BluetoothDevice.ACTION_FOUND)) { //found device
                 BluetoothDevice device = intent

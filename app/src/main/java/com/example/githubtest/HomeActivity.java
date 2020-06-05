@@ -6,15 +6,38 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.githubtest.SQL.BTConnection;
+import com.example.githubtest.SQL.BroadcastKey;
+import com.example.githubtest.SQL.DBAdapter;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -26,6 +49,9 @@ public class HomeActivity extends AppCompatActivity {
     private RadioButton rb_i;
 
     private MyFragmentPagerAdapter mAdapter;
+    DBAdapter dbAdapter;
+
+    public static Handler handler = new Handler();
 
     //几个代表页面的常量
     public static final int PAGE_HOME = 0;
@@ -34,6 +60,28 @@ public class HomeActivity extends AppCompatActivity {
     public static final int PAGE_I = 3;
 
     private String mobileNumber = null;
+    public String time="";
+    Date nowdate;
+    Date lastdate;
+
+    private Runnable DownloadBroadcastKey = new Runnable() {
+        public void run() {
+            this.update();
+            handler.postDelayed(this, 1000 *60*20);// 间隔20分钟
+        }
+
+        void update() {
+            getBroadcastKey();
+        }
+    };
+
+    private Runnable CompareLocal = new Runnable() {
+        @Override
+        public void run() {
+            processCompare();
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +93,112 @@ public class HomeActivity extends AppCompatActivity {
         mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         bindViews();
         rb_home.setChecked(true);
+        dbAdapter = new DBAdapter(this);
+        dbAdapter.open();//启动数据库
+
+        handler.post(DownloadBroadcastKey);
+    }
+
+    public void getBroadcastKey()
+    {
+
+            nowdate = new Date();
+            Calendar no = Calendar.getInstance();
+            no.setTime(nowdate);
+            no.set(Calendar.DATE, no.get(Calendar.DATE) - 28);
+            lastdate = no.getTime();
+            time = BTConnection.DateToString(lastdate);
+
+            dbAdapter.deleteAllBroadcastKsy();
+        Log.v("更新时间",time);
+        //http请求数据库
+        OkHttpClient client = new OkHttpClient();
+        FormBody body = new FormBody.Builder()
+                .add("date",time)
+                .build();
+        Request request = new Request.Builder()
+                .url("http://39.97.163.234:8443/api/bluetoothInfo/getBroadcastKeys")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                Log.d("LoginTest", "onFailure: 访问服务器失败");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String s = response.body().string();
+                Log.d("LoginTest", "onResponse: "+s);
+                processBroadcastKey(s);
+            }
+        });
+    }
+
+    public void processBroadcastKey(String s)
+    {
+       try{
+           JSONArray jsonArray = new JSONArray(s);
+           for(int i=0;i <jsonArray.length();i++)
+           {
+               JSONObject jsonObject = jsonArray.getJSONObject(i);
+               String connect_time = jsonObject.getString("connect_time");
+               String connect_mac = jsonObject.getString("connect_mac");
+               String connect_date = jsonObject.getString("connect_date");
+               String self_mac = jsonObject.getString("self_mac");
+               BroadcastKey broadcastKey = new BroadcastKey(
+                       BTConnection.strToDate(connect_date),Integer.parseInt(connect_time),
+                       connect_mac,self_mac
+               );
+               long k=dbAdapter.insertBroadcastKey(broadcastKey);
+               Log.d("插入情况", String.valueOf(k));
+               Log.d("连接时间",connect_date);
+               Log.d("连接时长",connect_time);
+               Log.d("连接Mac",connect_mac);
+               Log.d("确诊Mac",self_mac);
+           }
+           handler.post(CompareLocal);
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+    }
+
+
+    public String getLocalMacAddress() {
+        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifi.getConnectionInfo();
+        return info.getMacAddress();
+    }
+
+
+    public void processCompare()
+    {
+            int count =0;
+            String myMac = getLocalMacAddress();
+            //String myMac = "5676567fgg";
+            List<String> adresslist=new ArrayList<>();
+            //dbAdapter.insertBTConnection(new BTConnection(nowdate,"llll"));
+            BTConnection[] bt=dbAdapter.queryBTConnectionByDate(lastdate,nowdate);
+            BroadcastKey[] bk=dbAdapter.queryAllBroadcastKey();
+
+            if(bk!=null)
+            for(BroadcastKey b:bk)
+            {
+                if(adresslist.indexOf(b.self_mac)==-1) adresslist.add(b.self_mac);
+                if(b.connect_mac.equals(myMac)) count++;
+            }
+
+            if(bt!=null)
+            for(BTConnection connection:bt)
+            {
+                if(adresslist.indexOf(connection.MAC_address)!=-1) count++;
+            }
+
+            Log.v("警告数",String.valueOf(count));
+
 
     }
 

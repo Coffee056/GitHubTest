@@ -8,13 +8,14 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.util.Date;
+
 
 public class DBAdapter {
 
     private static final String DB_NAME = "BTConnection.db";
     private static final String DB_TABLE_BTConnection = "connectioninfo";
+    private static final String DB_TABLE_BroadcastKey = "broadcastket";
     private static final int DB_VERSION = 1;
 
     public static final String KEY_ID = "_id";
@@ -23,6 +24,10 @@ public class DBAdapter {
     public static final String KEY_MAC ="mac";
     public static final String KEY_DURATION ="duration";
 
+    public static final String KEY_CONNECT_DATE = "connect_date";
+    public static final String KEY_CONNECT_TIME = "connect_time";
+    public static final String KEY_CONNECT_MAC = "connect_mac";
+    public static final String KEY_SELF_MAC = "self_mac";
 
 
     private SQLiteDatabase db;
@@ -64,6 +69,15 @@ public class DBAdapter {
         return db.insert(DB_TABLE_BTConnection, null, newValues);
     }
 
+    public long insertBroadcastKey(BroadcastKey connection) {
+        ContentValues newValues = new ContentValues();
+
+        newValues.put(KEY_CONNECT_DATE, BTConnection.DateToString(connection.connect_date));
+        newValues.put(KEY_CONNECT_TIME, connection.connect_time);
+        newValues.put(KEY_CONNECT_MAC,connection.connect_mac);
+        newValues.put(KEY_SELF_MAC,connection.self_mac);
+        return db.insert(DB_TABLE_BroadcastKey, null, newValues);
+    }
 
     public BTConnection[] queryAllBTConnection() {
         Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
@@ -82,10 +96,15 @@ public class DBAdapter {
         Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
                 "datetime("+KEY_DATE+") >= "+" datetime(?) and datetime("+KEY_DATE+") <= "+
                         " datetime(?) ORDER BY "+KEY_DATE +" DESC"
-                , new String[] {date1.toString(),date2.toString()}, null, null, null);
+                , new String[] {BTConnection.DateToString(date1),BTConnection.DateToString(date2)}, null, null, null);
         return ConvertToBTConnection(results);
     }
 
+    public BroadcastKey[] queryAllBroadcastKey(){
+        Cursor results =  db.query(DB_TABLE_BroadcastKey, new String[] { KEY_ID, KEY_CONNECT_DATE, KEY_CONNECT_TIME,KEY_CONNECT_MAC,KEY_SELF_MAC},
+                        null,null, null, null, KEY_CONNECT_DATE+" DESC ");
+        return ConvertToBroadcastKey(results);
+    }
 
 
 
@@ -107,8 +126,30 @@ public class DBAdapter {
         return connections;
     }
 
+    private BroadcastKey[] ConvertToBroadcastKey(Cursor cursor){
+        int resultCounts = cursor.getCount();
+        if (resultCounts == 0 || !cursor.moveToFirst()){
+            return null;
+        }
+        BroadcastKey[] connections = new BroadcastKey[resultCounts];
+        for (int i = 0 ; i<resultCounts; i++){
+            connections[i] = new BroadcastKey();
+            connections[i].ID = cursor.getInt(0);
+            connections[i].connect_date = BTConnection.strToDate(cursor.getString(cursor.getColumnIndex(KEY_CONNECT_DATE)));
+            connections[i].connect_time = cursor.getInt(cursor.getColumnIndex(KEY_CONNECT_TIME));
+            connections[i].connect_mac=cursor.getString(cursor.getColumnIndex(KEY_CONNECT_MAC));
+            connections[i].self_mac=cursor.getString(cursor.getColumnIndex(KEY_SELF_MAC));
+            cursor.moveToNext();
+        }
+        return connections;
+    }
+
     public long deleteAllBTConnection() {
         return db.delete(DB_TABLE_BTConnection, null, null);
+    }
+
+    public long deleteAllBroadcastKsy() {
+        return db.delete(DB_TABLE_BroadcastKey, null, null);
     }
 
     public long deleteOneBTConnection(long id) {
@@ -134,10 +175,14 @@ public class DBAdapter {
         }
 
         private static final String DB_CREATE_BTConnection = "create table " +
-                DB_TABLE_BTConnection + " (" + KEY_ID + " integer primary key autoincreme" +
-                "nt, " +
+                DB_TABLE_BTConnection + " (" + KEY_ID + " integer primary key autoincrement, " +
                 KEY_DATE + " text not null," + KEY_ISSent + " integer not null,"+
                 KEY_DURATION+" integer not null,"+KEY_MAC +" text not null" +");";
+
+        private static final String DB_CREATE_BroadcastKey = "create table " +
+                DB_TABLE_BroadcastKey + " (" + KEY_ID + " integer primary key autoincrement, " +
+                KEY_CONNECT_DATE + " text not null," + KEY_CONNECT_TIME + " integer not null,"+
+                KEY_CONNECT_MAC+" text not null,"+KEY_SELF_MAC +" text not null" +");";
 
         @Override
         public void onOpen(SQLiteDatabase _db) {
@@ -148,13 +193,16 @@ public class DBAdapter {
         }
 
         @Override
-        public void onCreate(SQLiteDatabase _db) {
+        public void onCreate(SQLiteDatabase _db)
+        {
             _db.execSQL(DB_CREATE_BTConnection);
+            _db.execSQL(DB_CREATE_BroadcastKey);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase _db, int _oldVersion, int _newVersion) {
             _db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_BTConnection);
+            _db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_BroadcastKey);
             onCreate(_db);
         }
     }
