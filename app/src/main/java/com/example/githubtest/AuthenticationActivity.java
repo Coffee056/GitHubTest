@@ -3,8 +3,10 @@ package com.example.githubtest;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,12 +17,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -92,12 +96,55 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void successAuthenticate(){
-        Toast.makeText(this, "认证成功!", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent();
-        intent.putExtra("name",et_name.getText().toString());
-        intent.putExtra("IDnumber",et_IDnumber.getText().toString());
-        setResult(RESULT_OK,intent);
-        finish();
+        SharedPreferences preferences = getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        String mobileNumber = preferences.getString("tel",null);
+        String health = preferences.getString("health",null);
+        double risk = preferences.getFloat("risk",0.0f);
+
+
+        //http请求数据库
+        OkHttpClient client = new OkHttpClient();
+        FormBody body = new FormBody.Builder()
+                .add("tel",mobileNumber)
+                .add("name",et_name.getText().toString())
+                .add("idnumber",et_IDnumber.getText().toString())
+                .add("health",health)
+                .add("risk",String.valueOf(risk))
+                .build();
+        Request request = new Request.Builder()
+                .url("http://39.97.163.234:8443/api/userAccount/updateOne")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                Log.d("updateOneTest", "onFailure: 访问服务器失败");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String s = response.body().string();
+                Log.d("updateOneTest", "onResponse: "+s);
+                //成功上传身份认证
+                if(Integer.parseInt(s) == 0){
+                    SharedPreferences.Editor editor = getSharedPreferences("UserInfo",MODE_PRIVATE).edit();
+                    editor.putString("name",et_name.getText().toString());
+                    editor.putString("IDnumber",et_IDnumber.getText().toString());
+                    editor.apply();
+                    Intent intent = new Intent();
+                    intent.putExtra("name",et_name.getText().toString());
+                    intent.putExtra("IDnumber",et_IDnumber.getText().toString());
+
+                    setResult(RESULT_OK,intent);
+                    finish();
+                }
+            }
+        });
+
+
     }
 
 

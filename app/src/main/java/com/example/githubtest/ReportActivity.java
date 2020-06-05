@@ -63,12 +63,12 @@ public class ReportActivity extends AppCompatActivity {
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         private final int PAGE_COUNT = 2;
         private DiagnosisFragment myFragment1 = null;
-        private Fragment myFragment2 = null;
+        private RecoveryFragment myFragment2 = null;
 
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
             myFragment1 = DiagnosisFragment.newInstance("","");
-            myFragment2 = BlankFragment.newInstance("康复","");
+            myFragment2 = RecoveryFragment.newInstance("","");
         }
         @Override
         public Fragment getItem(int position) {
