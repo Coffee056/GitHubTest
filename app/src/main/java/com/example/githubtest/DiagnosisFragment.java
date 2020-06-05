@@ -166,12 +166,14 @@ public class DiagnosisFragment extends Fragment {
                 final String diagnosis_hospital = jsonObject.getString("diagnosis_hospital");
                 final String diagnosis_case = jsonObject.getString("diagnosis_case");
                 final String audit_status = jsonObject.getString("audit_status");
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         et_diagnosis_date.setText(diagnosis_time);
                         et_diagnosis_date.setFocusable(false);
+                        if(et_diagnosis_date.hasOnClickListeners()) {
+                            et_diagnosis_date.setOnClickListener(null);
+                        }
                         et_diagnosis_region.setText(diagnosis_location);
                         et_diagnosis_region.setFocusable(false);
                         et_diagnosis_hospital.setText(diagnosis_hospital);
@@ -214,6 +216,7 @@ public class DiagnosisFragment extends Fragment {
         et_diagnosis_case = (EditText) view.findViewById(R.id.et_diagnosis_case);
 
         report_btn = (Button) view.findViewById(R.id.report_btn);
+
 
         et_diagnosis_date.setOnClickListener(new View.OnClickListener() {
             @Override

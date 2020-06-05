@@ -172,6 +172,10 @@ public class RecoveryFragment extends Fragment {
                     public void run() {
                         et_recovery_date.setText(recovery_time);
                         et_recovery_date.setFocusable(false);
+                        et_recovery_date.setClickable(false);
+                        if(et_recovery_date.hasOnClickListeners()) {
+                            et_recovery_date.setOnClickListener(null);
+                        }
                         et_recovery_region.setText(recovery_location);
                         et_recovery_region.setFocusable(false);
                         et_recovery_hospital.setText(recovery_hospital);
