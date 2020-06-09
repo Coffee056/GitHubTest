@@ -68,6 +68,8 @@ public class HomeActivity extends AppCompatActivity {
     Date nowdate;
     Date lastdate;
 
+    public SafetyReminder[] SR;
+
     private Runnable DownloadBroadcastKey = new Runnable() {
         public void run() {
             this.update();
@@ -101,6 +103,8 @@ public class HomeActivity extends AppCompatActivity {
         dbAdapter.open();//启动数据库
 
         updateUserInfo();
+
+        SR=dbAdapter.queryAllSafetyReminder();
 
         handler.post(DownloadBroadcastKey);
     }
@@ -184,8 +188,8 @@ public class HomeActivity extends AppCompatActivity {
     {
             int count =0;
             String myMac = getLocalMacAddress();
-             //myMac = "098y8";
-            List<String> adresslist=new ArrayList<>();
+            myMac = "09678";
+        List<String> adresslist=new ArrayList<>();
             //dbAdapter.insertBTConnection(new BTConnection(nowdate,"llll"));
             BTConnection[] bt=dbAdapter.queryBTConnectionByDate(lastdate,nowdate);
             BroadcastKey[] bk=dbAdapter.queryAllBroadcastKey();
@@ -195,18 +199,32 @@ public class HomeActivity extends AppCompatActivity {
             {
                 if(adresslist.indexOf(b.self_mac)==-1) adresslist.add(b.self_mac);
                 if(b.connect_mac.equals(myMac))
-                    dbAdapter.insertSafetyReminder(new SafetyReminder(b.connect_date,b.connect_time));
+                    CreateNewSafetyReminder(new SafetyReminder(b.connect_date,b.connect_time));
             }
 
             if(bt!=null)
             for(BTConnection connection:bt)
             {
                 if(adresslist.indexOf(connection.MAC_address)!=-1)
-                    dbAdapter.insertSafetyReminder(new SafetyReminder(connection.datetime,connection.duration));;
+                    CreateNewSafetyReminder(new SafetyReminder(connection.datetime,connection.duration));;
             }
 
             HomeFragment.UpdateSafetyRemind();
 
+    }
+
+    public void CreateNewSafetyReminder(SafetyReminder s)
+    {
+        if(SR!=null)
+        for(SafetyReminder sr:SR)
+        {
+            Log.d("safety",s.connect_date.toString()+"\n"+sr.connect_date.toString()
+             +"\n"+s.connect_time+":"+sr.connect_time);
+            if(s.connect_date.toString().equals(sr.connect_date.toString())
+                    && s.connect_time== sr.connect_time)
+                return;
+        }
+        dbAdapter.insertSafetyReminder(s);
     }
 
     private void bindViews(){

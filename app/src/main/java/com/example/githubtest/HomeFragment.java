@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
 
     private  static Context context;
 
-    private ImageButton btn_bluetooth;
+    private static ImageButton btn_bluetooth;
     private static TextView tv_bluetooth_btn_text;
     private TextView tv_safety_reminder_record;
     private static LinearLayout ll_safety_reminder;
@@ -55,8 +55,9 @@ public class HomeFragment extends Fragment {
    public static Handler handler = new Handler();
     public static Runnable serviceStop = new Runnable() {
         public void run() {
+            btn_bluetooth.setSelected(false);
             tv_bluetooth_btn_text.setText("蓝牙未开启");
-            tv_bluetooth_btn_text.setTextColor(Color.parseColor("#FFFFFF"));
+            tv_bluetooth_btn_text.setTextColor(Color.parseColor("#9D9D9D"));
         }
     };
 

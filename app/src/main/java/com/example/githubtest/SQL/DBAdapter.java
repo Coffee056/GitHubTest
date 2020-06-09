@@ -123,6 +123,12 @@ public class DBAdapter {
         return ConvertToBroadcastKey(results);
     }
 
+    public SafetyReminder[] queryAllSafetyReminder(){
+        Cursor results =  db.query(DB_TABLE_SafetyReminder, new String[] { KEY_ID, KEY_CONNECT_DATE, KEY_CONNECT_TIME,KEY_IS_CONFIRM},
+                null,null, null, null, null);
+        return ConvertToSafetyReminder(results);
+    }
+
     public SafetyReminder[] queryUncofirmSafetyReminder(){
         Cursor results =  db.query(DB_TABLE_SafetyReminder, new String[] { KEY_ID, KEY_CONNECT_DATE, KEY_CONNECT_TIME,KEY_IS_CONFIRM},
                 KEY_IS_CONFIRM+"="+0,null, null, null, null);
@@ -203,6 +209,15 @@ public class DBAdapter {
         updateValues.put(KEY_DURATION,connection.duration);
 
         return db.update(DB_TABLE_BTConnection, updateValues,  KEY_ID + "=" + id, null);
+    }
+
+    public long updateSafetyReminder(long id , SafetyReminder connection){
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(KEY_CONNECT_DATE, BTConnection.DateToString(connection.connect_date));
+        updateValues.put(KEY_CONNECT_TIME, connection.connect_time);
+        updateValues.put(KEY_IS_CONFIRM,connection.isConfirm);
+
+        return db.update(DB_TABLE_SafetyReminder, updateValues,  KEY_ID + "=" + id, null);
     }
 
 
