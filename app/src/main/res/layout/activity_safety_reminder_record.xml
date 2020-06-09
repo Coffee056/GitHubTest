@@ -30,38 +30,44 @@
 
     </RelativeLayout>
 
-    <!-- 记录1 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_bottom_item_border_3" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textSize="15sp"
-            android:text="记录1     接触的时间    持续的时间  等" />
-
-
-    </LinearLayout>
-
-    <!-- 记录2 -->
-    <LinearLayout
+        android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"/>
 
-        android:background="@drawable/bg_bottom_item_border_3" >
+    <!-- 记录1 -->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:background="@drawable/bg_bottom_item_border_3" >-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textSize="15sp"
-            android:text="记录2     接触的时间    持续的时间  等" />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:textSize="15sp"-->
+<!--            android:text="记录1     接触的时间    持续的时间  等" />-->
 
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
+
+<!--    &lt;!&ndash; 记录2 &ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+
+<!--        android:background="@drawable/bg_bottom_item_border_3" >-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:textSize="15sp"-->
+<!--            android:text="记录2     接触的时间    持续的时间  等" />-->
+
+
+<!--    </LinearLayout>-->
 
 </LinearLayout>

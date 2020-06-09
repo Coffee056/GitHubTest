@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,7 +17,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.githubtest.SQL.BTConnection;
+import com.example.githubtest.SQL.DBAdapter;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 /**
@@ -35,6 +52,9 @@ public class UploadFragment extends Fragment {
 
     private ImageButton btn_upload;
     private TextView tv_upload_record;
+    private LinearLayout upload_Bluetooth;
+
+    DBAdapter dbAdapter;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -72,6 +92,10 @@ public class UploadFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_upload, container, false);
+
+        dbAdapter = new DBAdapter(getActivity());
+        dbAdapter.open();//启动数据库
+
         tv_upload_record = (TextView) view.findViewById(R.id.tv_upload_record);
         tv_upload_record.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +104,15 @@ public class UploadFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        upload_Bluetooth = (LinearLayout) view.findViewById(R.id.bluetooth_upload);
+        upload_Bluetooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Upload_Bluetooth();
+            }
+        });;
+
         btn_upload = (ImageButton) view.findViewById(R.id.btn_upload);
         btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,5 +132,58 @@ public class UploadFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public String getLocalMacAddress() {
+        WifiManager wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifi.getConnectionInfo();
+        return info.getMacAddress();
+    }
+
+    public void Upload_Bluetooth() {
+        SharedPreferences preferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        int userid = preferences.getInt("userid", 0);
+        String my_mac = getLocalMacAddress();
+        BTConnection[] bt = dbAdapter.queryUnsentBTConnection();
+
+        OkHttpClient client = new OkHttpClient();
+
+
+        if(bt!=null)
+        for(final BTConnection newbt:bt) {
+            FormBody body = new FormBody.Builder()
+                    .add("userid", String.valueOf(userid))
+                    .add("connect_date",BTConnection.DateToString(newbt.datetime))
+                    .add("connect_time",String.valueOf(newbt.duration))
+                    .add("self_mac",my_mac)
+                    .add("connect_mac",newbt.MAC_address)
+                    .build();
+            Request request = new Request.Builder()
+                    .url("http://39.97.163.234:8443/api/bluetoothInfo/insertOne")
+                    .post(body)
+                    .build();
+
+            Log.d("send",  userid+"\n"+my_mac+"\n"+
+                    BTConnection.DateToString(newbt.datetime)+"\n"+String.valueOf(newbt.duration)
+            +"\n"+newbt.MAC_address);
+
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    e.printStackTrace();
+                    Log.d("LoginTest", "onFailure: 访问服务器失败");
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String s = response.body().string();
+                    Log.d("LoginTest", "onResponse: " + s);
+                    newbt.isSent=1;
+                    dbAdapter.updateBTConnection(newbt.ID,newbt);
+                }
+            });
+
+        }
     }
 }

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.githubtest.SQL.BTConnection;
 import com.example.githubtest.SQL.BroadcastKey;
 import com.example.githubtest.SQL.DBAdapter;
+import com.example.githubtest.SQL.SafetyReminder;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -98,6 +99,8 @@ public class HomeActivity extends AppCompatActivity {
         rb_home.setChecked(true);
         dbAdapter = new DBAdapter(this);
         dbAdapter.open();//启动数据库
+
+        updateUserInfo();
 
         handler.post(DownloadBroadcastKey);
     }
@@ -181,7 +184,7 @@ public class HomeActivity extends AppCompatActivity {
     {
             int count =0;
             String myMac = getLocalMacAddress();
-            //String myMac = "5676567fgg";
+             //myMac = "098y8";
             List<String> adresslist=new ArrayList<>();
             //dbAdapter.insertBTConnection(new BTConnection(nowdate,"llll"));
             BTConnection[] bt=dbAdapter.queryBTConnectionByDate(lastdate,nowdate);
@@ -191,19 +194,18 @@ public class HomeActivity extends AppCompatActivity {
             for(BroadcastKey b:bk)
             {
                 if(adresslist.indexOf(b.self_mac)==-1) adresslist.add(b.self_mac);
-                if(b.connect_mac.equals(myMac)) count++;
+                if(b.connect_mac.equals(myMac))
+                    dbAdapter.insertSafetyReminder(new SafetyReminder(b.connect_date,b.connect_time));
             }
 
             if(bt!=null)
             for(BTConnection connection:bt)
             {
-                if(adresslist.indexOf(connection.MAC_address)!=-1) count++;
+                if(adresslist.indexOf(connection.MAC_address)!=-1)
+                    dbAdapter.insertSafetyReminder(new SafetyReminder(connection.datetime,connection.duration));;
             }
 
-            Log.v("警告数",String.valueOf(count));
-
-
-        updateUserInfo();
+            HomeFragment.UpdateSafetyRemind();
 
     }
 
@@ -255,6 +257,7 @@ public class HomeActivity extends AppCompatActivity {
         try{
             JSONObject jsonObject = new JSONObject(jsonData);
 
+            int userid = jsonObject.getInt("userid");
             String IDnumber = jsonObject.getString("idnumber");
             String health = jsonObject.getString("health");
             String name = jsonObject.getString("name");
@@ -271,6 +274,7 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             SharedPreferences.Editor editor = getSharedPreferences("UserInfo",MODE_PRIVATE).edit();
+            editor.putInt("userid",userid);
             editor.putString("tel",mobileNumber);
             editor.putString("name",name);
             editor.putString("IDnumber",IDnumber);

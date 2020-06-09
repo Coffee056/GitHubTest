@@ -16,6 +16,7 @@ public class DBAdapter {
     private static final String DB_NAME = "BTConnection.db";
     private static final String DB_TABLE_BTConnection = "connectioninfo";
     private static final String DB_TABLE_BroadcastKey = "broadcastket";
+    private static final String DB_TABLE_SafetyReminder = "safetyreminder";
     private static final int DB_VERSION = 1;
 
     public static final String KEY_ID = "_id";
@@ -28,6 +29,8 @@ public class DBAdapter {
     public static final String KEY_CONNECT_TIME = "connect_time";
     public static final String KEY_CONNECT_MAC = "connect_mac";
     public static final String KEY_SELF_MAC = "self_mac";
+
+    public static final String KEY_IS_CONFIRM = "isConfirm";
 
 
     private SQLiteDatabase db;
@@ -79,12 +82,26 @@ public class DBAdapter {
         return db.insert(DB_TABLE_BroadcastKey, null, newValues);
     }
 
+    public long insertSafetyReminder(SafetyReminder connection) {
+        ContentValues newValues = new ContentValues();
+
+        newValues.put(KEY_CONNECT_DATE, BTConnection.DateToString(connection.connect_date));
+        newValues.put(KEY_CONNECT_TIME, connection.connect_time);
+        newValues.put(KEY_IS_CONFIRM, connection.isConfirm);
+        return db.insert(DB_TABLE_SafetyReminder, null, newValues);
+    }
+
     public BTConnection[] queryAllBTConnection() {
         Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
                 null, null, null, null, null);
         return ConvertToBTConnection(results);
     }
 
+    public BTConnection[] queryUnsentBTConnection() {
+        Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
+                KEY_ISSent + "=" +0, null, null, null, null);
+        return ConvertToBTConnection(results);
+    }
 
     public BTConnection[] queryBTConnectionByID(long id) {
         Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
@@ -104,6 +121,12 @@ public class DBAdapter {
         Cursor results =  db.query(DB_TABLE_BroadcastKey, new String[] { KEY_ID, KEY_CONNECT_DATE, KEY_CONNECT_TIME,KEY_CONNECT_MAC,KEY_SELF_MAC},
                         null,null, null, null, KEY_CONNECT_DATE+" DESC ");
         return ConvertToBroadcastKey(results);
+    }
+
+    public SafetyReminder[] queryUncofirmSafetyReminder(){
+        Cursor results =  db.query(DB_TABLE_SafetyReminder, new String[] { KEY_ID, KEY_CONNECT_DATE, KEY_CONNECT_TIME,KEY_IS_CONFIRM},
+                KEY_IS_CONFIRM+"="+0,null, null, null, null);
+        return ConvertToSafetyReminder(results);
     }
 
 
@@ -139,6 +162,22 @@ public class DBAdapter {
             connections[i].connect_time = cursor.getInt(cursor.getColumnIndex(KEY_CONNECT_TIME));
             connections[i].connect_mac=cursor.getString(cursor.getColumnIndex(KEY_CONNECT_MAC));
             connections[i].self_mac=cursor.getString(cursor.getColumnIndex(KEY_SELF_MAC));
+            cursor.moveToNext();
+        }
+        return connections;
+    }
+
+    private SafetyReminder[] ConvertToSafetyReminder(Cursor cursor){
+        int resultCounts = cursor.getCount();
+        if (resultCounts == 0 || !cursor.moveToFirst()){
+            return null;
+        }
+        SafetyReminder[] connections = new SafetyReminder[resultCounts];
+        for (int i = 0 ; i<resultCounts; i++){
+            connections[i] = new SafetyReminder();
+            connections[i].ID = cursor.getInt(0);
+            connections[i].connect_date = BTConnection.strToDate(cursor.getString(cursor.getColumnIndex(KEY_CONNECT_DATE)));
+            connections[i].connect_time = cursor.getInt(cursor.getColumnIndex(KEY_CONNECT_TIME));
             cursor.moveToNext();
         }
         return connections;
@@ -184,6 +223,11 @@ public class DBAdapter {
                 KEY_CONNECT_DATE + " text not null," + KEY_CONNECT_TIME + " integer not null,"+
                 KEY_CONNECT_MAC+" text not null,"+KEY_SELF_MAC +" text not null" +");";
 
+        private static final String DB_CREATE_SafetyReminder = "create table " +
+                DB_TABLE_SafetyReminder + " (" + KEY_ID + " integer primary key autoincrement, " +
+                KEY_CONNECT_DATE + " text not null," + KEY_CONNECT_TIME + " integer not null,"+
+                KEY_IS_CONFIRM + " integer not null);";
+
         @Override
         public void onOpen(SQLiteDatabase _db) {
             super.onOpen(_db);
@@ -197,12 +241,14 @@ public class DBAdapter {
         {
             _db.execSQL(DB_CREATE_BTConnection);
             _db.execSQL(DB_CREATE_BroadcastKey);
+            _db.execSQL(DB_CREATE_SafetyReminder);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase _db, int _oldVersion, int _newVersion) {
             _db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_BTConnection);
             _db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_BroadcastKey);
+            _db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SafetyReminder);
             onCreate(_db);
         }
     }

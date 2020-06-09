@@ -17,7 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.githubtest.SQL.DBAdapter;
+import com.example.githubtest.SQL.SafetyReminder;
 
 import java.util.List;
 
@@ -39,20 +43,46 @@ public class HomeFragment extends Fragment {
     private String mParam2;
     //private boolean isOnBlueTooth = false;
 
+    private  static Context context;
+
     private ImageButton btn_bluetooth;
     private static TextView tv_bluetooth_btn_text;
     private TextView tv_safety_reminder_record;
+    private static LinearLayout ll_safety_reminder;
+    private static TextView tv_safety_reminder;
 
-    private static Handler handler = new Handler();
-    private static Runnable serviceStop = new Runnable() {
+
+   public static Handler handler = new Handler();
+    public static Runnable serviceStop = new Runnable() {
         public void run() {
             tv_bluetooth_btn_text.setText("蓝牙未开启");
             tv_bluetooth_btn_text.setTextColor(Color.parseColor("#FFFFFF"));
         }
     };
 
+    public static Runnable SafetyRemind = new Runnable() {
+        public void run() {
+            DBAdapter dbAdapter = new DBAdapter(context);
+            dbAdapter.open();//启动数据库
+            SafetyReminder[] safetyReminder=dbAdapter.queryUncofirmSafetyReminder();
+            if(safetyReminder==null)
+            {
+                ll_safety_reminder.setBackgroundColor(Color.parseColor("#00CC00"));
+                tv_safety_reminder.setText("未检测到安全风险");
+            }
+            else
+            {
+                ll_safety_reminder.setBackgroundColor(Color.parseColor("#EE2C2C"));
+                tv_safety_reminder.setText("检测到"+safetyReminder.length+"个风险,详情见安全提醒记录");
+            }
+        }
+    };
+
     public static void UpdateGUI() {
         handler.post(serviceStop);
+    }
+    public static void UpdateSafetyRemind() {
+        handler.post(SafetyRemind);
     }
 
     public HomeFragment() {
@@ -103,7 +133,10 @@ public class HomeFragment extends Fragment {
         btn_bluetooth = (ImageButton) view.findViewById(R.id.btn_bluetooth);
         tv_bluetooth_btn_text = (TextView) view.findViewById(R.id.tv_bluetooth_btn_text);
         tv_safety_reminder_record = (TextView) view.findViewById(R.id.tv_safety_reminder_record);
+        ll_safety_reminder = (LinearLayout) view.findViewById(R.id.ll_safety_reminder);
+        tv_safety_reminder= (TextView) view.findViewById(R.id.tv_safety_reminder);
 
+        context=this.getActivity();
         isServiceRun();
         final Intent serviceIntent = new Intent(getActivity(), BlueToothService.class);
         btn_bluetooth.setOnClickListener(new View.OnClickListener() {
@@ -182,6 +215,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+        HomeFragment.UpdateSafetyRemind();
         Log.d(TAG, "onResume: ");
     }
 
