@@ -13,5 +13,15 @@ public class SafetyReminder {
         this.connect_time=connect_time;
     }
 
+    @Override
+    public String toString(){
+        String result = "";
+        result += "id为" + this.ID +"，";
+        result += "时间为" + this.connect_date + "，";
+        result += "持续时间为"+ this.connect_time +"毫秒.";
+        result +=" 是否确认" + this.isConfirm;
+        return result;
+    }
+
     SafetyReminder(){}
 }

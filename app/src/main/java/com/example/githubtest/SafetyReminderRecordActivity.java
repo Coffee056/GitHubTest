@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -53,7 +54,7 @@ public class SafetyReminderRecordActivity extends AppCompatActivity {
                     {
                         SafetyReminder s=safetyReminders.get(i);
                         s.isConfirm=1;
-                        dbAdapter.updateSafetyReminder(s.ID,s);
+                        long k=dbAdapter.updateSafetyReminder(s.ID,s);
                     }
                 }
                 finish();
@@ -75,12 +76,14 @@ public class SafetyReminderRecordActivity extends AppCompatActivity {
         dbAdapter = new DBAdapter(this);
         dbAdapter.open();//启动数据库
 
-        SafetyReminder[] srs = dbAdapter.queryUncofirmSafetyReminder();
+        SafetyReminder[] srs = dbAdapter.queryAllSafetyReminder();
 
         if(srs!=null)
         {
             for(SafetyReminder sr:srs)
-                safetyReminders.add(sr);
+            {safetyReminders.add(sr);
+                Log.v("test",sr.toString());
+            }
             UpdateRecord();
         }
 

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -184,6 +185,7 @@ public class DBAdapter {
             connections[i].ID = cursor.getInt(0);
             connections[i].connect_date = BTConnection.strToDate(cursor.getString(cursor.getColumnIndex(KEY_CONNECT_DATE)));
             connections[i].connect_time = cursor.getInt(cursor.getColumnIndex(KEY_CONNECT_TIME));
+            connections[i].isConfirm = cursor.getInt(cursor.getColumnIndex(KEY_IS_CONFIRM));
             cursor.moveToNext();
         }
         return connections;

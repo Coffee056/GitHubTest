@@ -1,4 +1,5 @@
 package com.example.githubtest.adapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,9 +49,12 @@ public class SafetyRemindAdapter extends RecyclerView.Adapter<SafetyRemindAdapte
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         SafetyReminder safetyReminder = mSafetyReminder.get(position);
-        holder.tv_safety_reminder_text.setText("记录"+(position+1)+"  接触时间:"+
+        String s="记录"+(position+1)+"  接触时间:"+
                 BTConnection.DateToString(safetyReminder.connect_date)+
-                " ; 持续时间:"+safetyReminder.connect_time+"毫秒");
+                " ; 持续时间:"+safetyReminder.connect_time+"毫秒";
+        Log.v("time",safetyReminder.toString());
+        if(safetyReminder.isConfirm==1) s+="  已确认";
+        holder.tv_safety_reminder_text.setText(s);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
