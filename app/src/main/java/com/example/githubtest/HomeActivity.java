@@ -104,14 +104,12 @@ public class HomeActivity extends AppCompatActivity {
 
         updateUserInfo();
 
-        SR=dbAdapter.queryAllSafetyReminder();
-
         handler.post(DownloadBroadcastKey);
     }
 
     public void getBroadcastKey()
     {
-
+            SR=dbAdapter.queryAllSafetyReminder();
             nowdate = new Date();
             Calendar no = Calendar.getInstance();
             no.setTime(nowdate);

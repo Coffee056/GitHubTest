@@ -59,6 +59,14 @@ public class BlueToothService extends Service {
         intent.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(searchDevices, intent);
 
+
+        if(!testBlueTooth()) return false;
+        //addPairedDevice();
+        return  true;
+    }
+
+    private Boolean testBlueTooth()
+    {
         if (btAdapt == null) {
             Toast.makeText(getBaseContext(), "您的机器上没有发现蓝牙适配器，本程序将不能运行!", Toast.LENGTH_SHORT).show();
             HomeFragment.UpdateGUI();
@@ -74,8 +82,7 @@ public class BlueToothService extends Service {
             return false;
         }
 
-        //addPairedDevice();
-        return  true;
+        return true;
     }
 
     private Runnable backgroudWork = new Runnable() {
@@ -83,11 +90,14 @@ public class BlueToothService extends Service {
             while(true) {
                 try {
                     if (!Thread.interrupted()) {
+                        if(!testBlueTooth())
+                        {HomeFragment.handler.post(HomeFragment.serviceStop);
+                        workThread.interrupt();return;}
                         lastadresslist=adresslist;
                         lastlist=list;
                         adresslist=new ArrayList<>();
                         list = new ArrayList<>();
-                    btAdapt.startDiscovery();
+                        btAdapt.startDiscovery();
                         Thread.sleep(30*1000L);
                         continue;
                     }
