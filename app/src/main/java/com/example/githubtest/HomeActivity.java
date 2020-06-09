@@ -293,13 +293,13 @@ public class HomeActivity extends AppCompatActivity {
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         private final int PAGE_COUNT = 4;
         private HomeFragment myFragment1 = null;
-        private Fragment myFragment2 = null;
+        private ForecastFragment myFragment2 = null;
         private UploadFragment myFragment3 = null;
         private MeFragment myFragment4 = null;
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
             myFragment1 = HomeFragment.newInstance("","");
-            myFragment2 = BlankFragment.newInstance("预测","");
+            myFragment2 = ForecastFragment.newInstance("","");
             myFragment3 = UploadFragment.newInstance("","");
             myFragment4 = MeFragment.newInstance("","");
         }
