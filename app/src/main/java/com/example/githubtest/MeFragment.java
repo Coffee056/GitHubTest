@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class MeFragment extends Fragment {
     private TextView tv_phone_number;
     private TextView tv_health;
     private TextView tv_risk;
+    private Button refresh_btn;
 
     private String mobileNumber = null;
 
@@ -111,6 +113,7 @@ public class MeFragment extends Fragment {
         tv_phone_number = (TextView) view.findViewById(R.id.tv_phone_number);
         tv_health = (TextView) view.findViewById(R.id.tv_health);
         tv_risk = (TextView) view.findViewById(R.id.tv_risk);
+        refresh_btn = (Button) view.findViewById(R.id.refresh_btn);
 
         if(name != null && IDnumber != null){
             isAuthentication = true;
@@ -144,6 +147,14 @@ public class MeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        refresh_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUserInfo();
+            }
+        });
+
         return view;
     }
 
@@ -167,6 +178,66 @@ public class MeFragment extends Fragment {
                     }
                 }
         }
+    }
+
+    //从服务器更新用户信息
+    private void updateUserInfo(){
+        //http请求数据库
+        OkHttpClient client = new OkHttpClient();
+        FormBody body = new FormBody.Builder()
+                .add("tel",mobileNumber)
+                .build();
+        Request request = new Request.Builder()
+                .url("http://39.97.163.234:8443/api/userAccount/findOne")
+                .post(body)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                Log.d("FindOneTest", "onFailure: 访问服务器失败");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String s = response.body().string();
+                Log.d("FindOneTest", "onResponse: "+s);
+                parseJSONWithJSONObject(s);
+            }
+        });
+    }
+
+    //处理json格式数据，并增改SharedPreferences
+    private void parseJSONWithJSONObject(String jsonData){
+        try{
+            JSONObject jsonObject = new JSONObject(jsonData);
+
+            String myhealth = jsonObject.getString("health");
+            double myrisk = jsonObject.getDouble("risk");
+
+            health = myhealth;
+            risk = myrisk;
+            risk = new BigDecimal(risk*100).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+
+            SharedPreferences.Editor editor = getActivity().getSharedPreferences("UserInfo",getActivity().MODE_PRIVATE).edit();
+            editor.putString("health",myhealth);
+            editor.putFloat("risk",(float)myrisk);
+            editor.apply();
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tv_health.setText(health);
+                    tv_risk.setText(String.valueOf(risk)+"%");
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
