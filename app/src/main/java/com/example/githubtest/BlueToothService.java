@@ -90,9 +90,6 @@ public class BlueToothService extends Service {
             while(true) {
                 try {
                     if (!Thread.interrupted()) {
-                        if(!testBlueTooth())
-                        {HomeFragment.handler.post(HomeFragment.serviceStop);
-                        workThread.interrupt();return;}
                         lastadresslist=adresslist;
                         lastlist=list;
                         adresslist=new ArrayList<>();
