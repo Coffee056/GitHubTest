@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.githubtest.SQL.BTConnection;
 import com.example.githubtest.SQL.DBAdapter;
@@ -109,6 +110,7 @@ public class UploadFragment extends Fragment {
         upload_Bluetooth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getActivity().getBaseContext(),"开始上传蓝牙连接", Toast.LENGTH_SHORT).show();
                 Upload_Bluetooth();
             }
         });;
@@ -148,7 +150,6 @@ public class UploadFragment extends Fragment {
 
         OkHttpClient client = new OkHttpClient();
 
-
         if(bt!=null)
         for(final BTConnection newbt:bt) {
             FormBody body = new FormBody.Builder()
@@ -165,7 +166,7 @@ public class UploadFragment extends Fragment {
 
             Log.d("send",  userid+"\n"+my_mac+"\n"+
                     BTConnection.DateToString(newbt.datetime)+"\n"+String.valueOf(newbt.duration)
-            +"\n"+newbt.MAC_address);
+                    +"\n"+newbt.MAC_address);
 
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
@@ -181,9 +182,14 @@ public class UploadFragment extends Fragment {
                     Log.d("LoginTest", "onResponse: " + s);
                     newbt.isSent=1;
                     dbAdapter.updateBTConnection(newbt.ID,newbt);
+                    //Toast.makeText(getActivity().getBaseContext(),"上传蓝牙连接ID:"+newbt.ID, Toast.LENGTH_SHORT).show();
                 }
             });
 
         }
+
+        if(bt==null)
+        {Toast.makeText(getActivity().getBaseContext(),"无蓝牙连接需要上传", Toast.LENGTH_SHORT).show();}
+        else Toast.makeText(getActivity().getBaseContext(),"上传结束", Toast.LENGTH_SHORT).show();
     }
 }
