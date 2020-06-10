@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -89,6 +90,15 @@ public class BlueToothService extends Service {
         public void run() {
             while(true) {
                 try {
+                    Looper.prepare();
+                    if(!testBlueTooth())
+                    {
+                        Looper.loop();
+                        workThread.interrupt();
+                    }
+                    Looper.loop();
+
+
                     if (!Thread.interrupted()) {
                         lastadresslist=adresslist;
                         lastlist=list;

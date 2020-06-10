@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
     public static Runnable serviceStop = new Runnable() {
         public void run() {
             btn_bluetooth.setSelected(false);
-            tv_bluetooth_btn_text.setText("蓝牙未开启");
+            tv_bluetooth_btn_text.setText("扫描未开启");
             tv_bluetooth_btn_text.setTextColor(Color.parseColor("#9D9D9D"));
         }
     };
@@ -180,14 +180,14 @@ public class HomeFragment extends Fragment {
     private void onBlueTooth(){
         //isOnBlueTooth = true;
         btn_bluetooth.setSelected(true);
-        tv_bluetooth_btn_text.setText("蓝牙已开启");
+        tv_bluetooth_btn_text.setText("扫描已开启");
         tv_bluetooth_btn_text.setTextColor(getResources().getColor(R.color.white));
     }
 
     private void offBlueTooth(){
         //isOnBlueTooth = false;
         btn_bluetooth.setSelected(false);
-        tv_bluetooth_btn_text.setText("蓝牙未开启");
+        tv_bluetooth_btn_text.setText("扫描未开启");
         tv_bluetooth_btn_text.setTextColor(getResources().getColor(R.color.text_grey));
     }
 

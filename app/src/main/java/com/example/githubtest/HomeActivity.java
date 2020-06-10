@@ -186,7 +186,7 @@ public class HomeActivity extends AppCompatActivity {
     {
             int count =0;
             String myMac = getLocalMacAddress();
-            myMac = "09678";
+//            myMac = "09678";
         List<String> adresslist=new ArrayList<>();
             //dbAdapter.insertBTConnection(new BTConnection(nowdate,"llll"));
             BTConnection[] bt=dbAdapter.queryBTConnectionByDate(lastdate,nowdate);
