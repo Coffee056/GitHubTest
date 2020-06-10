@@ -185,8 +185,10 @@ public class HomeActivity extends AppCompatActivity {
     public void processCompare()
     {
             int count =0;
-            String myMac = getLocalMacAddress();
-            //myMac = "09678";
+        SharedPreferences preferences2 = this.getSharedPreferences("MAC", Context.MODE_PRIVATE);
+
+        String myMac = preferences2.getString("MAC", "02:00:00:00:00:00");
+        myMac="098y8";
         List<String> adresslist=new ArrayList<>();
             //dbAdapter.insertBTConnection(new BTConnection(nowdate,"llll"));
             BTConnection[] bt=dbAdapter.queryBTConnectionByDate(lastdate,nowdate);

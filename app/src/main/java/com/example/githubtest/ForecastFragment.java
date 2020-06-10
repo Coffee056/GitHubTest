@@ -112,7 +112,7 @@ public class ForecastFragment extends Fragment {
         Log.d("getForecastTest", "time: "+time);
         FormBody body = new FormBody.Builder()
                 .add("userid", String.valueOf(userid))
-                .add("selfmac","iiiii")   //getLocalMacAddress()
+                .add("selfmac","test")   //getLocalMacAddress()
                 .add("date",time)
                 .build();
         Request request = new Request.Builder()

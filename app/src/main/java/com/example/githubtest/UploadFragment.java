@@ -147,7 +147,7 @@ public class UploadFragment extends Fragment {
         int userid = preferences.getInt("userid", 0);
         SharedPreferences preferences2 = getActivity().getSharedPreferences("MAC", Context.MODE_PRIVATE);
         String my_mac = getLocalMacAddress();
-        my_mac = preferences2.getString("MAC", "5F:03:73:08:2F:98");
+        my_mac = preferences2.getString("MAC", "02:00:00:00:00:00");
         BTConnection[] bt = dbAdapter.queryUnsentBTConnection();
 
         OkHttpClient client = new OkHttpClient();
