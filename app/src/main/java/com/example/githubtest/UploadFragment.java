@@ -145,7 +145,9 @@ public class UploadFragment extends Fragment {
     public void Upload_Bluetooth() {
         SharedPreferences preferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         int userid = preferences.getInt("userid", 0);
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("MAC", Context.MODE_PRIVATE);
         String my_mac = getLocalMacAddress();
+        my_mac = preferences2.getString("MAC", "5F:03:73:08:2F:98");
         BTConnection[] bt = dbAdapter.queryUnsentBTConnection();
 
         OkHttpClient client = new OkHttpClient();
