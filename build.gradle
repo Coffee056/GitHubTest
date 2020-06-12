@@ -4,7 +4,15 @@ buildscript {
     
     repositories {
         google()
-        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+
+        maven { url'https://maven.aliyun.com/repository/public/' }
+
+        maven { url'https://maven.aliyun.com/repository/google/' }
+
+        maven { url'https://maven.aliyun.com/repository/jcenter/' }
+
+        maven { url'https://maven.aliyun.com/repository/central/' }
         jcenter()
         
     }
@@ -20,7 +28,15 @@ buildscript {
 allprojects {
     repositories {
         google()
-        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+
+        maven { url'https://maven.aliyun.com/repository/public/' }
+
+        maven { url'https://maven.aliyun.com/repository/google/' }
+
+        maven { url'https://maven.aliyun.com/repository/jcenter/' }
+
+        maven { url'https://maven.aliyun.com/repository/central/' }
         jcenter()
         
     }

@@ -6,9 +6,53 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <!-- 底部栏 -->
-        <include
-            android:id="@+id/bottom_menu"
-            layout="@layout/bottom_menu" />
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </RelativeLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/fragment_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header"
+        android:layout_above="@+id/bottom_menu" />
+
+
+    <RadioGroup
+        android:id="@+id/bottom_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/text_white"
+        android:orientation="horizontal">
+
+        <RadioButton
+            style="@style/bottom_item"
+            android:id="@+id/home_tab"
+            android:drawableTop="@drawable/tab_menu_home"
+            android:text="@string/home" />
+
+        <RadioButton
+            style="@style/bottom_item"
+            android:id="@+id/forecast_tab"
+            android:drawableTop="@drawable/tab_menu_forecast"
+            android:text="@string/forecast" />
+
+        <RadioButton
+            style="@style/bottom_item"
+            android:id="@+id/upload_tab"
+            android:drawableTop="@drawable/tab_menu_upload"
+            android:text="@string/upload" />
+
+        <RadioButton
+            style="@style/bottom_item"
+            android:id="@+id/i_tab"
+            android:drawableTop="@drawable/tab_menu_i"
+            android:text="@string/i" />
+    </RadioGroup>
 
 </RelativeLayout>

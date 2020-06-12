@@ -16,6 +16,15 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
+    <style name="InputBoxStyle2">
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:background">@drawable/border_input_box</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
     <style name="EditTextStyle">
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginRight">10dp</item>
@@ -29,13 +38,17 @@
 
 
     <style name="bottom_item">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">0.25</item>
-        <item name="android:orientation">vertical</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:paddingTop">5dp</item>
-        <item name="android:background">@drawable/bg_bottom_item_border_1</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@drawable/tab_menu_text</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:background">@drawable/bg_bottom_item_border_2</item>
     </style>
     <style name="bottom_img">
         <item name="android:layout_width">40dp</item>
@@ -50,5 +63,19 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="custom_dialog" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 模糊 -->
+    </style>
 
 </resources>
