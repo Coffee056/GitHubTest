@@ -106,7 +106,7 @@ public class BlueToothService extends Service {
     // 在API11之后构建Notification的方式
    Notification.Builder builder = new Notification.Builder
     (this.getApplicationContext()); //获取一个Notification构造器
-    Intent nfIntent = new Intent(this, MainActivity.class);
+    Intent nfIntent = new Intent(this, HomeActivity.class);
 
    builder.setContentIntent(PendingIntent.
                 getActivity(this, 0, nfIntent, 0)) // 设置PendingIntent
