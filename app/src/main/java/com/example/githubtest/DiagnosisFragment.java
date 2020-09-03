@@ -170,16 +170,16 @@ public class DiagnosisFragment extends Fragment {
                     @Override
                     public void run() {
                         et_diagnosis_date.setText(diagnosis_time);
-                        et_diagnosis_date.setFocusable(false);
+                        et_diagnosis_date.setEnabled(false);
                         if(et_diagnosis_date.hasOnClickListeners()) {
                             et_diagnosis_date.setOnClickListener(null);
                         }
                         et_diagnosis_region.setText(diagnosis_location);
-                        et_diagnosis_region.setFocusable(false);
+                        et_diagnosis_region.setEnabled(false);
                         et_diagnosis_hospital.setText(diagnosis_hospital);
-                        et_diagnosis_hospital.setFocusable(false);
+                        et_diagnosis_hospital.setEnabled(false);
                         et_diagnosis_case.setText(diagnosis_case);
-                        et_diagnosis_case.setFocusable(false);
+                        et_diagnosis_case.setEnabled(false);
                         report_btn.setClickable(false);
                         report_btn.setText(audit_status);
                     }

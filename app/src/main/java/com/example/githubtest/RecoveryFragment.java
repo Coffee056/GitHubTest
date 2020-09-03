@@ -171,17 +171,17 @@ public class RecoveryFragment extends Fragment {
                     @Override
                     public void run() {
                         et_recovery_date.setText(recovery_time);
-                        et_recovery_date.setFocusable(false);
+                        et_recovery_date.setEnabled(false);
                         et_recovery_date.setClickable(false);
                         if(et_recovery_date.hasOnClickListeners()) {
                             et_recovery_date.setOnClickListener(null);
                         }
                         et_recovery_region.setText(recovery_location);
-                        et_recovery_region.setFocusable(false);
+                        et_recovery_region.setEnabled(false);
                         et_recovery_hospital.setText(recovery_hospital);
-                        et_recovery_hospital.setFocusable(false);
+                        et_recovery_hospital.setEnabled(false);
                         et_recovery_case.setText(recovery_case);
-                        et_recovery_case.setFocusable(false);
+                        et_recovery_case.setEnabled(false);
                         report_btn.setClickable(false);
                         report_btn.setText(audit_status);
                     }
