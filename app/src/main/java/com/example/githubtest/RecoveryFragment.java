@@ -183,7 +183,7 @@ public class RecoveryFragment extends Fragment {
                         et_recovery_case.setText(recovery_case);
                         et_recovery_case.setEnabled(false);
                         report_btn.setClickable(false);
-                        report_btn.setText(audit_status);
+                        report_btn.setText("审核状态:     "+audit_status);
                     }
                 });
             }

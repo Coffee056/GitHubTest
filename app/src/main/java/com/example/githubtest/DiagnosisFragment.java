@@ -181,7 +181,7 @@ public class DiagnosisFragment extends Fragment {
                         et_diagnosis_case.setText(diagnosis_case);
                         et_diagnosis_case.setEnabled(false);
                         report_btn.setClickable(false);
-                        report_btn.setText(audit_status);
+                        report_btn.setText("审核状态:     "+audit_status);
                     }
                 });
             }

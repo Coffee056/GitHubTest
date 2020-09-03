@@ -21,7 +21,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp"
         android:textColor="@color/text_white"
-        android:text=" 开始上报\n确诊/康复\n     信息"
+        android:text="上报或查看\n  确诊/康复\n     信息"
         android:textSize="30sp" />
 
 
