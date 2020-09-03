@@ -186,7 +186,7 @@ public class HomeActivity extends AppCompatActivity {
     public void processCompare()
     {
             int count =0;
-        SharedPreferences preferences2 = this.getSharedPreferences("MAC", Context.MODE_PRIVATE);
+        SharedPreferences preferences2 = this.getSharedPreferences("Mac", Context.MODE_PRIVATE);
 
         String myMac = preferences2.getString("MAC", "02:00:00:00:00:00");
         myMac="098y8";

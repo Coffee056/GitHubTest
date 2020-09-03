@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         et_mobile_number = (EditText) findViewById(R.id.et_mobile_number);
         et_password = (EditText) findViewById(R.id.et_password);
         et_second_pwd = (EditText) findViewById(R.id.et_second_pwd);
-        et_MAC = (EditText) findViewById(R.id.et_MAC);
+
         register_btn = (Button) findViewById(R.id.register_btn);
         btn_back = (ImageView) findViewById(R.id.back_btn);
 
@@ -66,7 +66,6 @@ public class RegisterActivity extends AppCompatActivity {
         final String mobileNums = et_mobile_number.getText().toString();
         final String password = et_password.getText().toString();
         final String second_pwd = et_second_pwd.getText().toString();
-        final String MAC = et_MAC.getText().toString();
         if(TextUtils.isEmpty(mobileNums)){
             Toast.makeText(this,"手机号不能为空！",Toast.LENGTH_SHORT).show();
             et_mobile_number.requestFocus();
@@ -76,9 +75,6 @@ public class RegisterActivity extends AppCompatActivity {
         }else if(TextUtils.isEmpty(second_pwd)) {
             Toast.makeText(this, "请填写确认密码！", Toast.LENGTH_SHORT).show();
             et_second_pwd.requestFocus();
-        }else if(TextUtils.isEmpty(MAC)) {
-            Toast.makeText(this, "请填写MAC地址！", Toast.LENGTH_SHORT).show();
-            et_MAC.requestFocus();
         }else if(!password.equals(second_pwd)){
             Toast.makeText(this, "两次密码不同，请重新填写！", Toast.LENGTH_SHORT).show();
             et_second_pwd.setText("");
@@ -114,12 +110,6 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             String s = response.body().string();
-                            if(Integer.parseInt(s)==0)
-                            {
-                                SharedPreferences.Editor editor = getSharedPreferences("MAC",MODE_PRIVATE).edit();
-                                editor.putString("MAC",MAC);
-                                editor.apply();
-                            }
                             Log.d("RegisterTest", "onResponse: "+s);
                             processRegister(Integer.parseInt(s));
                         }
