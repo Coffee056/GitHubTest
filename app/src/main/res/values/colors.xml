@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">@color/qidao_blue</color>
+    <color name="colorPrimaryDark">#63D1B3</color>
     <color name="colorAccent">#03DAC5</color>
 
     <color name="qidao_blue">#1E90FF</color>
@@ -13,6 +13,7 @@
     <color name="yian_yellow">#F0DC70</color>
     <color name="text_red">#EE2C2C</color>
     <color name="red">#EE2C2C</color>
+    <color name="bgc">#FEFEFE</color>
     <color name="bg_grey">#EDEDED</color>
     <color name="blue">#108EE9</color>
 </resources>

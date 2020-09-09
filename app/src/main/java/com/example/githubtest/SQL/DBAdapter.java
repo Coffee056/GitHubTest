@@ -112,6 +112,14 @@ public class DBAdapter {
 
     public BTConnection[] queryBTConnectionByDate(Date date1, Date date2) {
         Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
+                "date("+KEY_DATE+") >= "+" date(?) and date("+KEY_DATE+") <= "+
+                        " date(?) ORDER BY "+KEY_DATE +" DESC"
+                , new String[] {BTConnection.DateToString(date1),BTConnection.DateToString(date2)}, null, null, null);
+        return ConvertToBTConnection(results);
+    }
+
+    public BTConnection[] queryBTConnectionByDate2(Date date1, Date date2) {
+        Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
                 "datetime("+KEY_DATE+") >= "+" datetime(?) and datetime("+KEY_DATE+") <= "+
                         " datetime(?) ORDER BY "+KEY_DATE +" DESC"
                 , new String[] {BTConnection.DateToString(date1),BTConnection.DateToString(date2)}, null, null, null);

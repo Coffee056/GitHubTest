@@ -18,11 +18,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.githubtest.SQL.DBAdapter;
 import com.example.githubtest.SQL.SafetyReminder;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -49,8 +52,10 @@ public class HomeFragment extends Fragment {
     private static ImageButton btn_bluetooth;
     private static TextView tv_bluetooth_btn_text;
     private TextView tv_safety_reminder_record;
+    private TextView tv_charts;
     private static LinearLayout ll_safety_reminder;
     private static TextView tv_safety_reminder;
+    private static ImageView bg;
 
 
    public static Handler handler = new Handler();
@@ -135,8 +140,12 @@ public class HomeFragment extends Fragment {
         btn_bluetooth = (ImageButton) view.findViewById(R.id.btn_bluetooth);
         tv_bluetooth_btn_text = (TextView) view.findViewById(R.id.tv_bluetooth_btn_text);
         tv_safety_reminder_record = (TextView) view.findViewById(R.id.tv_safety_reminder_record);
+        tv_charts = (TextView) view.findViewById(R.id.tv_charts);
         ll_safety_reminder = (LinearLayout) view.findViewById(R.id.ll_safety_reminder);
         tv_safety_reminder= (TextView) view.findViewById(R.id.tv_safety_reminder);
+        bg = (ImageView)view.findViewById(R.id.bg);
+
+//        bg.setAlpha(0.6f);
 
         context=this.getActivity();
         isServiceRun();
@@ -166,6 +175,15 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        tv_charts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),ChartActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
