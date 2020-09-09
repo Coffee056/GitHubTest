@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.githubtest.SQL.BTConnection;
@@ -50,6 +51,7 @@ public class ForecastFragment extends Fragment {
     private TextView tv_result;
     private Button btn_forecast;
     private String s;
+    private static ImageView bg;
 
     public ForecastFragment() {
         // Required empty public constructor
@@ -89,6 +91,8 @@ public class ForecastFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_forecast, container, false);
         btn_forecast = (Button) view.findViewById(R.id.btn_forecast);
         tv_result = (TextView) view.findViewById(R.id.tv_result);
+//        bg = (ImageView)view.findViewById(R.id.bg);
+//        bg.setAlpha(0.3f);
 
         btn_forecast.setOnClickListener(new View.OnClickListener() {
             @Override

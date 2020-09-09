@@ -145,7 +145,7 @@ public class HomeFragment extends Fragment {
         tv_safety_reminder= (TextView) view.findViewById(R.id.tv_safety_reminder);
         bg = (ImageView)view.findViewById(R.id.bg);
 
-//        bg.setAlpha(0.6f);
+        bg.setAlpha(0.3f);
 
         context=this.getActivity();
         isServiceRun();
