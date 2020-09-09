@@ -2,16 +2,14 @@ package com.example.githubtest;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.githubtest.SQL.BTConnection;
@@ -135,7 +133,7 @@ public class ChartActivity extends AppCompatActivity {
         this.dbAdapter = dbAdapter;
         this.context = context;
         generateInitialLineData();
-//            generateColumnData();
+        generateColumnData(initDateByDay(EndDate));
     }
 
     public void updateDate(Date StartDate, Date EndDate) {
@@ -143,7 +141,6 @@ public class ChartActivity extends AppCompatActivity {
         endDate = EndDate;
         generateInitialLineData();
         generateLineData();
-//            generateColumnData();
     }
 
 
@@ -159,7 +156,42 @@ public class ChartActivity extends AppCompatActivity {
         return new SimpleDateFormat("MM-dd", Locale.CHINESE).format(date);
     }
 
+     private void generateColumnData(Date date) {
+         int numColumns = 12;
 
+         Log.v("Column",BTConnection.DateToString(date));
+
+         List<AxisValue> axisValues = new ArrayList<AxisValue>();
+         List<Column> columns = new ArrayList<Column>();
+         List<SubcolumnValue> values;
+         for (int i = 0; i < numColumns; ++i) {
+
+             values = new ArrayList<SubcolumnValue>();
+
+             values.add(new SubcolumnValue(queryByDateTime(new Date(date.getTime()+i*2*60*60*1000)), Color.rgb(243, 156, 18)));
+
+
+             axisValues.add(new AxisValue(i).setLabel(2*i+"~"+2*(i+1)));
+
+             columns.add(new Column(values).setHasLabelsOnlyForSelected(true));
+         }
+
+         columnData = new ColumnChartData(columns);
+
+         columnData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
+         columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(2));
+
+         chartBottom.setColumnChartData(columnData);
+
+         // Set value touch listener that will trigger changes for chartTop.
+//         chartBottom.setOnValueTouchListener(new ValueColumnTouchListener(chartBottom));
+
+         // Set selection mode to keep selected month column highlighted.
+         chartBottom.setValueSelectionEnabled(true);
+
+         chartBottom.setZoomType(ZoomType.HORIZONTAL);
+
+     }
 
 
     private void generateInitialLineData() {
@@ -207,9 +239,16 @@ public class ChartActivity extends AppCompatActivity {
         chartTop.setViewportChangeListener(new LineChartViewportChangeListener(chartTop, 7));
     }
 
-     private int queryByDateAndTag(Date date) {
+     private int queryByDate(Date date) {
         BTConnection[] res = dbAdapter.queryBTConnectionByDate(new java.sql.Date(date.getTime()), new java.sql.Date(date.getTime()));
         if (res == null) return 0;
+         Log.v("length",""+res.length);
+         return res.length;
+     }
+
+     private int queryByDateTime(Date date) {
+         BTConnection[] res = dbAdapter.queryBTConnectionByDate2(new java.sql.Date(date.getTime()), new java.sql.Date(date.getTime()+2*60*60*1000));
+         if (res == null) return 0;
          Log.v("length",""+res.length);
          return res.length;
      }
@@ -223,7 +262,7 @@ public class ChartActivity extends AppCompatActivity {
 
         for (int i = 0; i < line.getValues().size(); i++) {
 
-            line.getValues().get(i).setTarget(line.getValues().get(i).getX(), queryByDateAndTag(new Date(Start)));
+            line.getValues().get(i).setTarget(line.getValues().get(i).getX(), queryByDate(new Date(Start)));
             Start += DateUtils.DAY_IN_MILLIS;
 //                } else {
 //                    line.getValues().get(i).setTarget(line.getValues().get(i).getX(), 0);
@@ -235,8 +274,52 @@ public class ChartActivity extends AppCompatActivity {
     }
 
 
+//     private class ValueColumnTouchListener implements ColumnChartOnValueSelectListener {
+//         ColumnChartView columnChartView;
+//
+//         public ValueColumnTouchListener(ColumnChartView columnChartView) {
+//             this.columnChartView = columnChartView;
+//         }
+//
+//         @Override
+//         public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
+//             generateLineData();
+//
+//             long Start = startDate.getTime() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS, End = endDate.getTime() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
+//             int size = (int) ((End - Start) / DateUtils.DAY_IN_MILLIS) + 1;
+//             if (value.getValue() * 60 > 120) {
+//                 if (ChartView.toast == null) {
+//                     toast = Toast.makeText(context, "在选定的" + size + "天内，共花费了约" + (float) (Math.round(value.getValue() * 10)) / 10 + "小时在" + getTags()[columnIndex].name + "上", Toast.LENGTH_SHORT);
+//                 } else {
+//                     toast.setText("在选定的" + size + "天内，共花费了约" + (float) (Math.round(value.getValue() * 10)) / 10 + "小时在" + getTags()[columnIndex].name + "上");
+//                     toast.setDuration(Toast.LENGTH_SHORT);
+//                 }
+//                 toast.show();
+//             } else {
+//                 if (ChartView.toast == null) {
+//                     toast = Toast.makeText(context, "在选定的" + size + "天内，共花费了" + (int) (value.getValue() * 60) + "分钟在" + getTags()[columnIndex].name + "上", Toast.LENGTH_SHORT);
+//                 } else {
+//                     toast.setText("在选定的" + size + "天内，共花费了" + (int) (value.getValue() * 60) + "分钟在" + getTags()[columnIndex].name + "上");
+//                     toast.setDuration(Toast.LENGTH_SHORT);
+//                 }
+//                 toast.show();
+//             }
+//         }
+//
+//         @Override
+//         public void onValueDeselected() {
+//             generateLineData(ChartUtils.COLOR_GREEN, 0, 0);
+//         }
+//     }
 
-
+     public static Date initDateByDay(Date date){
+         Calendar calendar = Calendar.getInstance();
+         calendar.setTime(date);
+         calendar.set(Calendar.HOUR_OF_DAY, 0);
+         calendar.set(Calendar.MINUTE, 0);
+         calendar.set(Calendar.SECOND, 0);
+         return calendar.getTime();
+     }
 
      private class ValueLineTouchListener implements LineChartOnValueSelectListener {
          LineChartView lineChartView;
@@ -253,7 +336,7 @@ public class ChartActivity extends AppCompatActivity {
              long Start = startDate.getTime();
              long Now = (Start + DateUtils.DAY_IN_MILLIS * pointIndex);
              String date = getDay(Now);
-
+             generateColumnData(new Date(initDateByDay(startDate).getTime()+DateUtils.DAY_IN_MILLIS * pointIndex));
                  if (ChartActivity.toast == null) {
                      ChartActivity.toast = Toast.makeText(context, "在" + date + "，共扫描到" + (int) pointValue.getY()  + "条蓝牙连接记录" , Toast.LENGTH_SHORT);
                  } else {
