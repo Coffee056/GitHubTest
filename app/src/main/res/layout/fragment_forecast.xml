@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,11 +7,13 @@
     android:background="@color/bg_grey">
 
     <!-- TODO: Update blank fragment layout -->
+
+
     <Button
         android:id="@+id/btn_forecast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="100dp"
         android:layout_marginHorizontal="50dp"
         android:textColor="@color/text_white"
         android:background="@color/blue"
@@ -22,20 +24,22 @@
         android:id="@+id/tv_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="180dp"
         android:text="预测结果:暂无"
         android:textColor="@color/text_grey"
         android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/bg"
-        android:layout_width="match_parent"
-        android:layout_height="244dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
         android:scaleType="fitXY"
-        android:src="@drawable/bg3"
+        android:src="@drawable/bg13"
         android:visibility="visible" />
 
-</LinearLayout>
+</RelativeLayout>
