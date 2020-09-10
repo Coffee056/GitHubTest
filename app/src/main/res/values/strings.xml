@@ -7,6 +7,7 @@
     <string name="forgetPwd">忘记密码</string>
     <string name="Mac_hint">请输入手机蓝牙Mac地址</string>
     <string name="sign_in">登&#8194;&#8194;&#8194;&#8194;&#8194;录</string>
+    <string name="sign_out">退&#8194;&#8194;&#8194;&#8194;&#8194;出</string>
 
     <string name="home">首页</string>
     <string name="forecast">预测</string>

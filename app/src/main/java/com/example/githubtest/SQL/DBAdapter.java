@@ -100,7 +100,7 @@ public class DBAdapter {
 
     public BTConnection[] queryUnsentBTConnection() {
         Cursor results =  db.query(DB_TABLE_BTConnection, new String[] { KEY_ID, KEY_DATE, KEY_ISSent,KEY_DURATION,KEY_MAC},
-                KEY_ISSent + "=" +0, null, null, null, null);
+                KEY_ISSent + "= 0" , null, null, null, null);
         return ConvertToBTConnection(results);
     }
 

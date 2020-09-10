@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,13 +53,59 @@ public class MeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    public static Handler handler = new Handler();
     private TextView tv_authentication;
     private TextView tv_phone_number;
     private TextView tv_health;
     private TextView tv_risk;
     private Button refresh_btn;
+    private  Button logout_btn;
 
     private String mobileNumber = null;
+
+    private Runnable logout = new Runnable() {
+        @Override
+        public void run() {
+            userLogout();
+        }
+    };
+
+    //用户尝试登录
+    private void userLogout(){
+        if(mobileNumber!=null)
+        {
+//            Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+//            intent.putExtra("mobileNumber",mobileNums);
+//            startActivity(intent);
+//            finish();
+            //http请求数据库
+            OkHttpClient client = new OkHttpClient();
+            FormBody body = new FormBody.Builder()
+                    .add("tel",mobileNumber)
+                    .build();
+            Request request = new Request.Builder()
+                    .url("http://39.97.163.234:8443/api/userAccount/logoutOne")
+                    .post(body)
+                    .build();
+
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    e.printStackTrace();
+                    Log.d("LoginTest", "onFailure: 访问服务器失败");
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String s = response.body().string();
+                    Log.d("LoginTest", "onResponse: "+s);
+                    Intent intent = new Intent(getActivity(),MainActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+    }
 
     public MeFragment() {
         // Required empty public constructor
@@ -114,6 +162,7 @@ public class MeFragment extends Fragment {
         tv_health = (TextView) view.findViewById(R.id.tv_health);
         tv_risk = (TextView) view.findViewById(R.id.tv_risk);
         refresh_btn = (Button) view.findViewById(R.id.refresh_btn);
+        logout_btn = (Button) view.findViewById(R.id.logout);
 
         if(name != null && IDnumber != null){
             isAuthentication = true;
@@ -154,6 +203,13 @@ public class MeFragment extends Fragment {
                 updateUserInfo();
             }
         });
+        logout_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               handler.post(logout);
+            }
+        });
+
 
         return view;
     }

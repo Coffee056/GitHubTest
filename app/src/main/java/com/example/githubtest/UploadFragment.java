@@ -150,6 +150,12 @@ public class UploadFragment extends Fragment {
         my_mac = preferences2.getString("Mac", "02:00:00:00:00:00");
         BTConnection[] bt = dbAdapter.queryUnsentBTConnection();
 
+        BTConnection[] bt2 = dbAdapter.queryAllBTConnection();
+        for(final BTConnection newbt:bt2)
+        {
+            Log.v("msg",newbt.toString());
+        }
+
         OkHttpClient client = new OkHttpClient();
 
         if(bt!=null)

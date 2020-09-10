@@ -113,10 +113,14 @@ public class ForecastFragment extends Fragment {
         Calendar no = Calendar.getInstance();
         no.set(Calendar.DATE, no.get(Calendar.DATE) - 28);
         String time = BTConnection.DateToString(no.getTime());
-        Log.d("getForecastTest", "time: "+time);
+
+        String selfmac=null;
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("Mac", Context.MODE_PRIVATE);
+        if(preferences2 != null) selfmac=preferences2.getString("Mac", "02:00:00:00:00:00");
+        Log.d("getForecastTest", "id"+userid+"time: "+time+";mac:"+selfmac);
         FormBody body = new FormBody.Builder()
                 .add("userid", String.valueOf(userid))
-                .add("selfmac","test")   //getLocalMacAddress()
+                .add("selfmac",selfmac)   //getLocalMacAddress()
                 .add("date",time)
                 .build();
         Request request = new Request.Builder()

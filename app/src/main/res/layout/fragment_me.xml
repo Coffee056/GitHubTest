@@ -165,5 +165,15 @@
         android:src="@drawable/bg15"
         android:visibility="visible" />
 
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:background="#63D1B3"
+        android:text="@string/sign_out"
+        android:textColor="@color/white"
+        android:textSize="18dp" />
+
 
 </LinearLayout>

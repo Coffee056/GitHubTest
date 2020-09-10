@@ -70,11 +70,7 @@ public class MainActivity extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this,HomeActivity.class);
-//                startActivity(intent);
-//                userLogin(et_account.getText().toString(),et_password.getText().toString(),et_Mac.getText().toString());
-                handler.post(login);
-
+              handler.post(login);
             }
         });
         tv_register.setOnClickListener(new View.OnClickListener() {
