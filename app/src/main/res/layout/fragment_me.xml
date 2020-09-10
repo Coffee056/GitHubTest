@@ -160,7 +160,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="100dp"
+
         android:scaleType="fitXY"
         android:src="@drawable/bg15"
         android:visibility="visible" />
@@ -170,6 +170,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="30dp"
         android:background="#63D1B3"
         android:text="@string/sign_out"
         android:textColor="@color/white"
