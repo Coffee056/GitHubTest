@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,HomeActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+//                startActivity(intent);
 //                userLogin(et_account.getText().toString(),et_password.getText().toString(),et_Mac.getText().toString());
                 handler.post(login);
 
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
         else if(! isMac(Mac)){
             Toast.makeText(this,"Mac格式不正确",Toast.LENGTH_SHORT).show();
-           et_account.requestFocus();
+           et_Mac.requestFocus();
         }
         else{
 //            Intent intent = new Intent(MainActivity.this,HomeActivity.class);

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ public class ChartActivity extends AppCompatActivity {
     Date startDate = new Date();
     Date endDate = new Date();
     PlaceholderFragment placeholderFragment;
+    private ImageView btn_back;
 
     public static String formatTime(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("MM-dd", Locale.CHINESE);
@@ -96,6 +98,14 @@ public class ChartActivity extends AppCompatActivity {
         TextView endDateText = findViewById(R.id.endDate);
         Calendar endDateCalendar = Calendar.getInstance();
         setDateOnClickListener(endDateText, endDateText, endDateCalendar, endDate);
+        btn_back = (ImageView) findViewById(R.id.back_btn);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
         initDateTime(startDateText, startDateCalendar, endDateText, endDateCalendar);
 
@@ -231,7 +241,7 @@ public class ChartActivity extends AppCompatActivity {
         // For build-up animation you have to disable viewport recalculation.
         chartTop.setViewportCalculationEnabled(false);
         // And set initial max viewport and current viewport- remember to set viewports after data.
-        Viewport v = new Viewport(-0.1f, 24, (float) size + 0.1f, 0);
+        Viewport v = new Viewport(-0.1f, 10000, (float) size + 0.1f, 0);
 //            Viewport v = new Viewport(chartTop.getMaximumViewport());
         chartTop.setMaximumViewport(v);
         chartTop.setCurrentViewport(v);
@@ -260,14 +270,23 @@ public class ChartActivity extends AppCompatActivity {
         // Modify data targets
         Line line = lineData.getLines().get(0);// For this example there is always only one line.
 
+        int max=0;
         for (int i = 0; i < line.getValues().size(); i++) {
-
-            line.getValues().get(i).setTarget(line.getValues().get(i).getX(), queryByDate(new Date(Start)));
+            int m = queryByDate(new Date(Start));
+            if(m>max) max=m;
+            line.getValues().get(i).setTarget(line.getValues().get(i).getX(),m);
             Start += DateUtils.DAY_IN_MILLIS;
 //                } else {
 //                    line.getValues().get(i).setTarget(line.getValues().get(i).getX(), 0);
 //                }
         }
+
+        Viewport v = chartTop.getCurrentViewport();
+        Log.v("top",""+v.top);
+        v.top = max+10;
+        Log.v("top",""+v.top);
+        chartTop.setMaximumViewport(v);
+        chartTop.setCurrentViewport(v);
         // Start new data animation with 300ms duration;
         chartTop.startDataAnimation(300);
         chartTop.setOnValueTouchListener(new ValueLineTouchListener(chartTop));
