@@ -118,6 +118,8 @@ public class HomeActivity extends AppCompatActivity {
             lastdate = no.getTime();
             time = BTConnection.DateToString(lastdate);
 
+
+            dbAdapter.deleteUselessBTConnection(lastdate);
             dbAdapter.deleteAllBroadcastKsy();
         Log.v("更新时间",time);
         //http请求数据库
@@ -186,10 +188,13 @@ public class HomeActivity extends AppCompatActivity {
     public void processCompare()
     {
             int count =0;
-        SharedPreferences preferences2 = this.getSharedPreferences("Mac", Context.MODE_PRIVATE);
+//        SharedPreferences preferences2 = this.getSharedPreferences("Mac", Context.MODE_PRIVATE);
 
-        String myMac = preferences2.getString("MAC", "02:00:00:00:00:00");
-        myMac="098y8";
+//        String myMac = preferences2.getString("MAC", "02:00:00:00:00:00");
+        SharedPreferences preferences2 = this.getSharedPreferences("Mac", Context.MODE_PRIVATE);
+//        String my_mac = getLocalMacAddress();
+        String myMac = preferences2.getString("Mac", "02:00:00:00:00:00");
+        Log.e("compare",myMac);
         List<String> adresslist=new ArrayList<>();
             //dbAdapter.insertBTConnection(new BTConnection(nowdate,"llll"));
             BTConnection[] bt=dbAdapter.queryBTConnectionByDate(lastdate,nowdate);

@@ -112,21 +112,21 @@ public class ChartActivity extends AppCompatActivity {
         DBAdapter dbAdapter = new DBAdapter(this);
         dbAdapter.open();
 
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-02 11:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-03 11:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-05 11:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-01 11:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-04 11:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-06 11:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-02 12:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-03 13:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-05 14:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-02 15:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-03 16:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-05 17:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-02 18:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-03 19:22:33"),"02:00:00:00:00:00"));
-        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-05 20:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-02 11:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-03 11:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-05 11:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-01 11:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-04 11:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-06 11:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-02 12:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-03 13:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-05 14:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-02 15:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-03 16:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-05 17:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-02 18:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-03 19:22:33"),"02:00:00:00:00:00"));
+//        dbAdapter.insertBTConnection(new BTConnection(BTConnection.strToDate("2020-09-05 20:22:33"),"02:00:00:00:00:00"));
 
 
 

@@ -211,6 +211,13 @@ public class DBAdapter {
         return db.delete(DB_TABLE_BTConnection,  KEY_ID + "=" + id, null);
     }
 
+    public long deleteUselessBTConnection(Date date) {
+        return db.delete(DB_TABLE_BTConnection,  " datetime("+KEY_DATE+") <= datetime(?)",
+                new String[] {BTConnection.DateToString(date)});
+    }
+
+
+
 
     public long updateBTConnection(long id , BTConnection connection){
         ContentValues updateValues = new ContentValues();
